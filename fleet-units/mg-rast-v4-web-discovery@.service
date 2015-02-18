@@ -1,0 +1,11 @@
+[Unit]
+Description=mg-rast-v4-web discovery
+BindsTo=mg-rast-v4-web@%i.service
+After=mg-rast-v4-web@%i.service
+
+[Service]
+ExecStart=/bin/sh -c "while true; do etcdctl set /services/mg-rast-v4-web/mg-rast-v4-web@%i '{ \"host\": \"%H\", \"port\": 80 }' --ttl 60;sleep 45;done"
+ExecStop=/usr/bin/etcdctl rm /services/mg-rast-v4-web/mg-rast-v4-web@%i
+
+[X-Fleet]
+MachineOf=mg-rast-v4-web@%i.service
