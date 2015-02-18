@@ -4,7 +4,7 @@ BindsTo=mg-rast-v4-web@%i.service
 After=mg-rast-v4-web@%i.service
 
 [Service]
-ExecStart=/bin/sh -c "while read -r line; do export \"$line\" ; done < /etc/environment ; while true; do etcdctl set /services/mg-rast-v4-web/mg-rast-v4-web@%i '{ \"host\": \"%H\", \"port\": 80, \"COREOS_PRIVATE_IPV4\": \"${COREOS_PRIVATE_IPV4}\", \"COREOS_PUBLIC_IPV4\": \"${COREOS_PUBLIC_IPV4}\"}' --ttl 60;sleep 45;done"
+ExecStart=/bin/sh -c "while read -r line; do export $line ; done < /etc/environment ; while true; do etcdctl set /services/mg-rast-v4-web/mg-rast-v4-web@%i '{ \"host\": \"%H\", \"port\": 80, \"COREOS_PRIVATE_IPV4\": \"${COREOS_PRIVATE_IPV4}\", \"COREOS_PUBLIC_IPV4\": \"${COREOS_PUBLIC_IPV4}\"}' --ttl 60;sleep 45;done"
 ExecStop=/usr/bin/etcdctl rm /services/mg-rast-v4-web/mg-rast-v4-web@%i
 
 [X-Fleet]
