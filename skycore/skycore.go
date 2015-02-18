@@ -589,7 +589,7 @@ func (skyc *Skycore) Get_etcd_image(image_id string) (etcd_repository string, et
 	return
 }
 
-func (skyc *Skycore) skycore_load(command_arg string) (err error) {
+func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err error) {
 
 	//skyc.Shock_client
 	fmt.Fprint(os.Stdout, "skycore_load\n")
@@ -735,6 +735,9 @@ func (skyc *Skycore) skycore_load(command_arg string) (err error) {
 	fmt.Fprintf(os.Stdout, fmt.Sprintf("tag: %s\n", image_tag))
 	fmt.Fprintf(os.Stdout, fmt.Sprintf("image_id: %s\n", image_id))
 
+	if image_repository == "" || image_tag == "" || image_id == "" {
+		return errors.New(fmt.Sprintf("error: attributes not available"))
+	}
 	// now check if this image_id is already available
 
 	image_obj, err := skyc.Docker_client.InspectImage(image_id)
@@ -776,6 +779,39 @@ func (skyc *Skycore) skycore_load(command_arg string) (err error) {
 
 	}
 
+	if request_tag != "" {
+
+		new_image_name := image_repository + ":" + request_tag
+		fmt.Fprintf(os.Stdout, "trying to set additional tag %s", new_image_name)
+
+		do_tag := false
+		some_old_image_obj, err := skyc.Docker_client.InspectImage(new_image_name)
+		if err != nil {
+			// image not found, good, will tag
+			do_tag = true
+		} else {
+			if some_old_image_obj.ID != image_id {
+				fmt.Fprintf(os.Stdout, "trying to delete old image %s %s", some_old_image_obj.ID, new_image_name)
+				err = skyc.Docker_client.RemoveImage(some_old_image_obj.ID)
+				if err != nil {
+					return errors.New(fmt.Sprintf("error deleting old image, maybe container is running?: %s", err.Error()))
+				}
+
+				do_tag = true
+			}
+		}
+
+		if do_tag {
+			tag_opts := docker.TagImageOptions{Repo: image_repository, Tag: request_tag}
+			err = skyc.Docker_client.TagImage(image_id, tag_opts)
+			if err != nil {
+
+				return errors.New(fmt.Sprintf("error tagging image: %s", err.Error()))
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -809,6 +845,7 @@ func main() {
 	var etcd_urls_string string
 	var docker_socket string
 	var private_image bool
+	var request_tag string
 	var help bool
 
 	var etcd_urls []string
@@ -820,6 +857,7 @@ func main() {
 	flags.BoolVar(&no_etcd, "no_etcd", false, "Disable use of etcd")
 	flags.StringVar(&etcd_urls_string, "etcd_urls", etcd_urls_string_default, "Comma separated list of etcd urls (default: "+etcd_urls_string_default+")")
 	flags.StringVar(&docker_socket, "docker_socket", "", "docker socket")
+	flags.StringVar(&request_tag, "tag", "", "tag image with tag, e.g. --tag=latest, this will tag image twice and untag existing image")
 	flags.BoolVar(&private_image, "private", false, "Do not make image public")
 
 	flags.BoolVar(&help, "help", false, "")
@@ -917,7 +955,7 @@ func main() {
 	}
 	switch command {
 	case "pull":
-		err := skyc.skycore_load(command_arg)
+		err := skyc.skycore_load(command_arg, request_tag)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, fmt.Sprintf("error: ", err.Error(), "\n"))
 		}
