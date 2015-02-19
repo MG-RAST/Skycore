@@ -62,7 +62,7 @@ export MACHINES=`nova list --name my_coreos | grep -E -o "([0-9]{1,3}[\.]){3}[0-
 ```
 and copy the binary
 ```bash
-for i in ${MACHINES} ; do scp -i ~/.ssh/wo_magellan_pubkey.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
+for i in ${MACHINES} ; do scp -i <your_private_ssh_key> -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
 ```
 
 ## Fleet service deployment
