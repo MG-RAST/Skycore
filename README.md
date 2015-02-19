@@ -65,7 +65,23 @@ and copy the binary
 for i in ${MACHINES} ; do scp -i <your_private_ssh_key> -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
 ```
 
+## Docker image registration for services with etcd
+Once you have built and uploaded a new Docker image for a particular service to Shock, you need to update the etcd configuration to point to the new Shock node. To get access to etcd you probably have to log into one of the machines. The service name has to match the unit name, for example "mg-rast-v4-web":
+```bash
+curl -L http://127.0.0.1:4001/v2/keys/service_images/<servicename>/shock -XPUT -d value="shock.metagenomics.anl.gov/node/<node>"
+```
+
+You can read the current configuration with the same url:
+```bash
+curl -L http://127.0.0.1:4001/v2/keys/service_images/<servicename>/shock
+```
+
+You can also use the etcdctl command to modify values and to browse the etcd tree. For example "etcdctl ls /service_images/" will show for which services Docker images are registered.
+
+
 ## Fleet service deployment
+The unit files in this example are using skycore, which needs to be installed on all machines. This also means that docker images have to be registered with etcd.
+
 Log into a machine and confirm:
 ```bash
 fleetctl list-machines
