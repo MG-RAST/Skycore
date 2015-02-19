@@ -51,8 +51,7 @@ type Dockerimage_attributes struct {
 	Image          *docker.Image `json:"image"`
 }
 
-// write: curl -L http://127.0.0.1:4001/v2/keys/services/<servicename>/shock -XPUT -d value="shock.metagenomics.anl.gov/node/<node>" // not with ?download
-// read:  curl -L http://127.0.0.1:4001/v2/keys/services/<servicename>/shock
+
 
 // shock.metagenomics.anl.gov
 
@@ -381,7 +380,7 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 	}
 
 	fmt.Fprintf(os.Stdout, "New shock node: "+upload_url+"/"+node+"\n")
-	fmt.Fprintf(os.Stdout, "example: curl -L http://127.0.0.1:4001/v2/keys/services/<servicename>/shock -XPUT -d value=\"%s\"\n", upload_url+"/"+node)
+	fmt.Fprintf(os.Stdout, "example: curl -L http://127.0.0.1:4001/v2/keys/service_images/<servicename>/shock -XPUT -d value=\"%s\"\n", upload_url+"/"+node)
 	return
 }
 
@@ -615,7 +614,7 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 
 		service_name = strings.TrimPrefix(command_arg, "etcd:")
 
-		service_path := "/services/" + service_name
+		service_path := "/service_images/" + service_name
 		shock_path := service_path + "/shock"
 
 		image_url, err := skyc.Get_etcd_value(shock_path)
