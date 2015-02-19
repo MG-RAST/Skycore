@@ -2,7 +2,7 @@
 
 Tool to push Docker images into Shock and pull from Shock. Preserves some metadata and uses etcd configuration to deploy Docker images.
 
-Use the Dockerfile in this repository to statically compile the skycore. The Dockerfile contains some more comments.
+Use the Dockerfile in this repository to statically compile skycore. The Dockerfile contains some more comments.
 
 # CoreOS stuff
 Instructions for OpenStack
@@ -93,10 +93,16 @@ fleetctl submit mg-rast-v4-web\@.service mg-rast-v4-web-discovery\@.service
 fleetctl list-unit-files
 ```
 
-Start 2 instances:
+Start 2 instances of each of mg-rast-v4-web and mg-rast-v4-web-discovery:
 ```bash
 fleetctl start fleetctl start mg-rast-v4-web{,-discovery}@{1..2}.service
 fleetctl list-units
+```
+The mg-rast-v4-web-discovery sidekicks provide service discovery via the etcd keys /services/mg-rast-v4-web/mg-rast-v4-web@1 and /services/mg-rast-v4-web/mg-rast-v4-web@2 . The example below shows the service information stored by a sidekick:
+
+```bash
+etcdctl get /services/mg-rast-v4-web/mg-rast-v4-web@1
+{ "host":"coreos-wolfgang-139c22c0-4fbc-4de1-9d94-81507ccf323f.novalocal","port": 80,"COREOS_PRIVATE_IPV4":"10.1.12.67","COREOS_PUBLIC_IPV4":""}
 ```
 
 Destroy units and delete unit files. Delete unit files only when you need to make changes to them:
