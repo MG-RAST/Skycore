@@ -65,15 +65,28 @@ and copy the binary
 for i in ${MACHINES} ; do scp -i ~/.ssh/wo_magellan_pubkey.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
 ```
 
-## Fleet
-Deploy and start service using fleet. 
+## Fleet service deployment
+Log into a machine and confirm:
+```bash
+fleetctl list-machines
+```
+
+Download unit files from git repo. Then deploy unit files for a service and its sidekick (called discovery): 
 ```bash
 fleetctl submit mg-rast-v4-web\@.service mg-rast-v4-web-discovery\@.service
-fleetctl start mg-rast-v4-web\@1
-(running)
-fleetctl stop mg-rast-v4-web\@1
-fleetctl unload mg-rast-v4-web\@1
-fleetctl destroy mg-rast-v4-web\@.service
+fleetctl list-unit-files
+```
+
+Start 2 instances:
+```bash
+fleetctl start fleetctl start mg-rast-v4-web{,-discovery}@{1..2}.service
+fleetctl list-units
+```
+
+Destroy units and delete unit files. Delete unit files only when you need to make changes to them:
+```bash
+fleetctl destroy fleetctl start mg-rast-v4-web{,-discovery}@{1..2}.service
+fleetctl destroy mg-rast-v4-web\@.service mg-rast-v4-web-discovery\@.service
 ```
 
 Monitoring:
