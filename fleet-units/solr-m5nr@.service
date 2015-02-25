@@ -1,0 +1,17 @@
+[Unit]
+Description=Solr m5nr
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+EnvironmentFile=-/etc/environment
+ExecStartPre=-/usr/bin/docker kill solar-m5nr
+ExecStartPre=-/usr/bin/docker rm solar-m5nr
+ExecStartPre=/home/core/skycore pull --tag=latest etcd:solar-m5nr
+
+ExecStart=/usr/bin/docker run --rm --name solar-m5nr ${COREOS_PRIVATE_IPV4}:8983:8983 solar-m5nr:latest /bin/bash -c "cd /m5nr && make load-cached-solr && /m5nr/dev/run_solr.sh"
+ExecStop=/usr/bin/docker stop solar-m5nr
+
+[X-Fleet]
+Conflicts=solar-m5nr@*.service
