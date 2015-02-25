@@ -269,7 +269,7 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 	}
 
 	// *** export (save) image from docker engine
-	image_raw_reader, err := skyc.ExportImageNonBlocking(name)
+	image_raw_reader, err := skyc.ExportImageNonBlocking(image_id)
 	if err != nil {
 		return
 	}
