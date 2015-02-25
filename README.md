@@ -4,7 +4,9 @@ Tool to push Docker images into Shock and pull from Shock. Preserves some metada
 
 Use the Dockerfile in this repository to statically compile skycore. The Dockerfile contains some more comments.
 
-## Example deployment 
+wget http://dunkirk.mcs.anl.gov/~wgerlach/skycore
+
+## Example deployment process for a fleet service using skycore
 Build image (requires docker):
 ```bash
 docker build --tag=mgrast/m5nr-solr:20150223_1700 --force-rm --no-cache https://raw.githubusercontent.com/MG-RAST/myM5NR/master/solr/docker/Dockerfile
@@ -17,6 +19,7 @@ Register shock node (of the new image) with etcd (requires etcd access):
 ```bash
 curl -L http://127.0.0.1:4001/v2/keys/service_images/m5nr-solr/shock -XPUT -d value="shock.metagenomics.anl.gov/node/<node_id>"
 ```
+Please update/add the corresponding line register_docker_image_for_service_all.sh .
 
 And restart fleet service... either with fleetctl or fleet api..
 
