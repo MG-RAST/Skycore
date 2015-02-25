@@ -2,9 +2,12 @@
 
 Tool to push Docker images into Shock and pull from Shock. Preserves some metadata and uses etcd configuration to deploy Docker images.
 
-Use the Dockerfile in this repository to statically compile skycore. The Dockerfile contains some more comments.
+## Get Skycore binary
+Either use the Dockerfile in this repository to statically compile skycore (The Dockerfile contains some more comments), or download pre-compiled binary:
 
+```bash
 wget http://dunkirk.mcs.anl.gov/~wgerlach/skycore
+```
 
 ## Example deployment process for a fleet service using skycore
 Build image (requires docker):
