@@ -117,7 +117,7 @@ fleetctl list-unit-files
 
 Start 2 instances of each of mg-rast-v4-web and mg-rast-v4-web-discovery:
 ```bash
-fleetctl start mg-rast-v4-web{,-discovery}@{1..2}.service
+fleetctl start mg-rast-v4-web{,-discovery}\@{1..2}.service
 fleetctl list-units
 ```
 The mg-rast-v4-web-discovery sidekicks provide service discovery via the etcd keys /services/mg-rast-v4-web/mg-rast-v4-web@1 and /services/mg-rast-v4-web/mg-rast-v4-web@2 . The example below shows the service information stored by a sidekick:
@@ -129,8 +129,8 @@ etcdctl get /services/mg-rast-v4-web/mg-rast-v4-web@1
 
 Destroy units and delete unit files. Delete unit files only when you need to make changes to them:
 ```bash
-fleetctl destroy mg-rast-v4-web{,-discovery}@{1..2}.service
-fleetctl destroy mg-rast-v4-web\@.service mg-rast-v4-web-discovery\@.service
+fleetctl destroy mg-rast-v4-web{,-discovery}\@{1..2}.service
+fleetctl destroy mg-rast-v4-web{,-discovery}\@.service
 ```
 
 Monitoring:
