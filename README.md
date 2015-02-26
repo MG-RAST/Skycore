@@ -139,3 +139,9 @@ fleetctl list-machines
 fleetctl list-unit-files 
 fleetctl list-units
 ```
+
+Debugging:
+```bash
+systemctl status -l service
+journalctl -b -u service
+```
