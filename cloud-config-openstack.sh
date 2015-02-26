@@ -11,6 +11,12 @@ until ! [[ -z $COREOS_PRIVATE_IPV4 ]]; do
  source /etc/environment
  
 done
+
+
+until ! [[ -z $INSTANCE_TYPE ]]; do
+ INSTANCE_TYPE=$(curl http://169.254.169.254/latest/meta-data/instance-type)
+done
+
  
 cat << 'EOF' > /tmp/user_data.yml 
 #cloud-config
@@ -23,6 +29,7 @@ coreos:
    peer-addr: \$private_ipv4:7001
  fleet:
    public-ip: \$private_ipv4
+   metadata="instance_type=\${INSTANCE_TYPE}"
  units:
    - name: etcd.service
      command: start
