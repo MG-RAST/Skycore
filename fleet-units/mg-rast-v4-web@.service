@@ -10,7 +10,7 @@ ExecStartPre=-/usr/bin/docker kill mg-rast-v4-web
 ExecStartPre=-/usr/bin/docker rm mg-rast-v4-web
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:mg-rast-v4-web
 
-ExecStart=/usr/bin/docker run --rm --name mg-rast-v4-web ${COREOS_PRIVATE_IPV4}:80:80 mg-rast-v4-web:latest /usr/sbin/apache2ctl -D FOREGROUND
+ExecStart=/usr/bin/docker run --rm --name mg-rast-v4-web -p ${COREOS_PRIVATE_IPV4}:80:80 mg-rast-v4-web:latest /usr/sbin/apache2ctl -D FOREGROUND
 ExecStop=/usr/bin/docker stop mg-rast-v4-web
 
 [X-Fleet]
