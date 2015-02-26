@@ -2,9 +2,14 @@
 
 Tool to push Docker images into Shock and pull from Shock. Preserves some metadata and uses etcd configuration to deploy Docker images.
 
-Use the Dockerfile in this repository to statically compile skycore. The Dockerfile contains some more comments.
+## Get Skycore binary
+Either use the Dockerfile in this repository to statically compile skycore (The Dockerfile contains some more comments), or download pre-compiled binary:
 
-## Example deployment 
+```bash
+wget http://dunkirk.mcs.anl.gov/~wgerlach/skycore
+```
+
+## Example deployment process for a fleet service using skycore
 Build image (requires docker):
 ```bash
 docker build --tag=mgrast/m5nr-solr:20150223_1700 --force-rm --no-cache https://raw.githubusercontent.com/MG-RAST/myM5NR/master/solr/docker/Dockerfile
@@ -17,6 +22,7 @@ Register shock node (of the new image) with etcd (requires etcd access):
 ```bash
 curl -L http://127.0.0.1:4001/v2/keys/service_images/m5nr-solr/shock -XPUT -d value="shock.metagenomics.anl.gov/node/<node_id>"
 ```
+Please update/add the corresponding line register_docker_image_for_service_all.sh .
 
 And restart fleet service... either with fleetctl or fleet api..
 
@@ -105,13 +111,13 @@ fleetctl list-machines
 
 Download unit files from git repo. Then deploy unit files for a service and its sidekick (called discovery): 
 ```bash
-fleetctl submit mg-rast-v4-web\@.service mg-rast-v4-web-discovery\@.service
+fleetctl submit mg-rast-v4-web{,-discovery}\@.service
 fleetctl list-unit-files
 ```
 
 Start 2 instances of each of mg-rast-v4-web and mg-rast-v4-web-discovery:
 ```bash
-fleetctl start fleetctl start mg-rast-v4-web{,-discovery}@{1..2}.service
+fleetctl start mg-rast-v4-web{,-discovery}\@{1..2}.service
 fleetctl list-units
 ```
 The mg-rast-v4-web-discovery sidekicks provide service discovery via the etcd keys /services/mg-rast-v4-web/mg-rast-v4-web@1 and /services/mg-rast-v4-web/mg-rast-v4-web@2 . The example below shows the service information stored by a sidekick:
@@ -123,8 +129,8 @@ etcdctl get /services/mg-rast-v4-web/mg-rast-v4-web@1
 
 Destroy units and delete unit files. Delete unit files only when you need to make changes to them:
 ```bash
-fleetctl destroy fleetctl start mg-rast-v4-web{,-discovery}@{1..2}.service
-fleetctl destroy mg-rast-v4-web\@.service mg-rast-v4-web-discovery\@.service
+fleetctl destroy mg-rast-v4-web{,-discovery}\@{1..2}.service
+fleetctl destroy mg-rast-v4-web{,-discovery}\@.service
 ```
 
 Monitoring:
