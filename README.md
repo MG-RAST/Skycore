@@ -87,6 +87,16 @@ and copy the binary
 for i in ${MACHINES} ; do scp -i <your_private_ssh_key> -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
 ```
 
+## Log in to your CoreOS cluster
+
+Login with forwarding your ssh user agent. Run these commands on your client outside of the CoreOS cluster:
+```bash
+eval $(ssh-agent)
+ssh-add <path to your private key>
+ssh -A core@<instance>
+```
+You may want to assign a public IP address to one of you CoreOS instances.
+
 ## Docker image registration for services with etcd
 Once you have built and uploaded a new Docker image for a particular service to Shock, you need to update the etcd configuration to point to the new Shock node. To get access to etcd you probably have to log into one of the machines. The service name has to match the unit name, for example "mg-rast-v4-web":
 ```bash
@@ -138,4 +148,10 @@ Monitoring:
 fleetctl list-machines
 fleetctl list-unit-files 
 fleetctl list-units
+```
+
+Debugging:
+```bash
+systemctl status -l service
+journalctl -b -u service
 ```
