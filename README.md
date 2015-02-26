@@ -111,7 +111,7 @@ fleetctl list-machines
 
 Download unit files from git repo. Then deploy unit files for a service and its sidekick (called discovery): 
 ```bash
-fleetctl submit mg-rast-v4-web\@.service mg-rast-v4-web-discovery\@.service
+fleetctl submit mg-rast-v4-web{,-discovery}\@.service
 fleetctl list-unit-files
 ```
 
