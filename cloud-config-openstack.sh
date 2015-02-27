@@ -17,6 +17,29 @@ until ! [[ -z $INSTANCE_TYPE ]]; do
  INSTANCE_TYPE=$(curl http://169.254.169.254/latest/meta-data/instance-type)
 done
 
+MOUNT_POINT="/mnt"
+mkdir -p ${MOUNT_POINT}
+
+
+EPHEMERAL="`curl -s -f -m 20 http://169.254.169.254/latest/meta-data/block-device-mapping/ephemeral0`"
+if [ -z "${EPHEMERAL}" ]; then
+	# workaround for a bug in EEE 2
+	EPHEMERAL="`curl -s -f -m 20 http://169.254.169.254/latest/meta-data/block-device-mapping/ephemeral`"
+fi
+if [ ! -z "${EPHEMERAL}" ]; then
+MOUNTUNIT=$(cat <<EOF
+   - name: media-ephemeral.mount
+     command: start
+     content: |
+       [Mount]
+       What=${EPHEMERAL}
+       Where=/media/ephemeral
+       Type=ext3
+EOF
+)
+fi
+
+
  
 cat << 'EOF' > /tmp/user_data.yml 
 #cloud-config
@@ -32,13 +55,14 @@ coreos:
 EOF
 cat << EOF >> /tmp/user_data.yml
    metadata: "instance_type=${INSTANCE_TYPE}"
-EOF
-cat << 'EOF' >> /tmp/user_data.yml
  units:
    - name: etcd.service
      command: start
    - name: fleet.service
      command: start
+${MOUNTUNIT}
+EOF
+cat << 'EOF' >> /tmp/user_data.yml
 ssh_authorized_keys:
   # include one or more SSH public keys
   - <public ssh key>
