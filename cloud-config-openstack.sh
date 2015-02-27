@@ -29,7 +29,11 @@ coreos:
    peer-addr: \$private_ipv4:7001
  fleet:
    public-ip: \$private_ipv4
-   metadata="instance_type=\${INSTANCE_TYPE}"
+EOF
+cat << EOF >> /tmp/user_data.yml
+   metadata: "instance_type=${INSTANCE_TYPE}"
+EOF
+cat << 'EOF' >> /tmp/user_data.yml
  units:
    - name: etcd.service
      command: start
