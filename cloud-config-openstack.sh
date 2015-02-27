@@ -60,6 +60,16 @@ cat << EOF >> /tmp/user_data.yml
      command: start
    - name: fleet.service
      command: start
+   - name: settimezone.service
+     command: start
+     content: |
+       [Unit]
+       Description=Set the timezone
+
+       [Service]
+       ExecStart=/usr/bin/timedatectl set-timezone America/Chicago
+       RemainAfterExit=yes
+       Type=oneshot
 ${MOUNTUNIT}
 EOF
 cat << 'EOF' >> /tmp/user_data.yml
