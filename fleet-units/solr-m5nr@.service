@@ -10,7 +10,7 @@ ExecStartPre=-/usr/bin/docker kill solar-m5nr
 ExecStartPre=-/usr/bin/docker rm solar-m5nr
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:solar-m5nr
 
-ExecStart=/usr/bin/docker run --rm --name solar-m5nr -v /mnt/solr-m5nr/:/mnt -p ${COREOS_PRIVATE_IPV4}:8983:8983 solar-m5nr:latest /bin/bash -c "cd /m5nr && make load-cached-solr && /m5nr/dev/run_solr.sh"
+ExecStart=/usr/bin/docker run --rm --name solar-m5nr -v /media/ephemeral/solr-m5nr/:/mnt -p ${COREOS_PRIVATE_IPV4}:8983:8983 solar-m5nr:latest /bin/bash -c "cd /m5nr && make load-cached-solr && /m5nr/dev/run_solr.sh"
 ExecStop=/usr/bin/docker stop solar-m5nr
 
 [X-Fleet]
