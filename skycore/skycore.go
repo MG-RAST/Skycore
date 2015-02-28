@@ -956,7 +956,7 @@ func main() {
 	case "pull":
 		err := skyc.skycore_load(command_arg, request_tag)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "error: %s\n", err.Error()))
+			fmt.Fprintf(os.Stderr, "error: %s\n", err.Error())
 			os.Exit(1)
 		}
 		break
@@ -964,7 +964,7 @@ func main() {
 
 		node_id, err := skyc.save_image_to_shock(command_arg, private_image)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "error: %s\n", err.Error()))
+			fmt.Fprintf(os.Stderr, "error: %s\n", err.Error())
 			os.Exit(1)
 		}
 		fmt.Fprintf(os.Stdout, "uploaded image: "+node_id+"\n")
