@@ -38,7 +38,7 @@ type Skycore struct {
 }
 
 type Dockerimage_attributes struct {
-	Temporary  string `json:"temporary"`
+	//Temporary  string `json:"temporary"`
 	Type       string `json:"type"`       // required= "dockerimage"
 	Id         string `json:"id"`         // required
 	Name       string `json:"name"`       // required
