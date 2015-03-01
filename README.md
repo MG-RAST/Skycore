@@ -64,6 +64,15 @@ nova secgroup-add-rule coreos tcp 4001 4001 10.1.0.0/16
 nova secgroup-add-rule coreos tcp 7001 7001 10.1.0.0/16
 ```
 
+Other service ports:
+```bash
+nova secgroup-create solr-m5nr "Solr m5nr 8983"
+nova secgroup-add-rule solr-m5nr tcp 8983 8983 0.0.0.0/0
+
+nova secgroup-create mgrast-v4-web "MGRAST v4 web 80"
+nova secgroup-add-rule mgrast-v4-web tcp 80 80 0.0.0.0/0
+```
+
 Use nova boot to start your instances:
 ```bash
 nova boot \
