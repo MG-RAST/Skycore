@@ -48,10 +48,8 @@ type Dockerimage_attributes struct {
 	Base_image_tag string        `json:"base_image_tag"`
 	Base_image_id  string        `json:"base_image_id"`
 	Dockerfile     string        `json:"dockerfile"`
-	Image          *docker.Image `json:"image"`
+	Image          *docker.Image `json:"image"` // warning: size cannot be stored in AND retrieved from JSON (int64 vs float64)
 }
-
-
 
 // shock.metagenomics.anl.gov
 
@@ -280,9 +278,9 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 		return
 	}
 
-	// TODO remove temporary
+	image_obj.Size = 0 // ugly workaround !
 	attr_struct := Dockerimage_attributes{
-		Temporary:  "1",
+
 		Id:         image_id,
 		Type:       "dockerimage",
 		Name:       name,
