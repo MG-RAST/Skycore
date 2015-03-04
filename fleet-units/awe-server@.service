@@ -1,0 +1,27 @@
+[Unit]
+Description=AWE server (awe-server and mongo db run in their own containers)
+After=docker.service
+Requires=docker.service
+
+[Service]
+# service name:   awe-server
+# image name:     skyport/awe-server
+# container name: awe-server
+
+TimeoutStartSec=0
+EnvironmentFile=-/etc/environment
+ExecStartPre=-/usr/bin/docker kill awe-server
+ExecStartPre=-/usr/bin/docker rm awe-server
+ExecStartPre=-/usr/bin/docker kill awe-server-mongodb
+ExecStartPre=-/usr/bin/docker rm awe-server-mongodb
+ExecStartPre=/home/core/skycore pull --tag=latest etcd:awe-server
+ExecStartPre=/usr/bin/docker run -d --rm --name awe-server-mongodb -v /media/ephemeral/awe-server/mongodb/:/data/db --expose=27017 dockerfile/mongodb 
+
+ExecStartPre=mkdir -p /media/ephemeral/awe-server/ && /usr/bin/curl "https://raw.githubusercontent.com/wgerlach/AWE_develop/master/awe-server.cfg" > /media/ephemeral/awe-server/awe-server.cfg
+
+ExecStart=/usr/bin/docker run --rm --name awe-server -p ${COREOS_PRIVATE_IPV4}:80:80 -p 8001:8001 -v /media/ephemeral/awe-server/awe-server.cfg:/awe-config/awe-server.cfg  skyport/awe-server:latest /awe-server -debug 1 -conf /awe-config/awe-server.cfg
+ExecStop=/usr/bin/docker stop awe-server
+ExecStop=/usr/bin/docker stop awe-server-mongodb
+
+[X-Fleet]
+Conflicts=awe-server@*.service
