@@ -8,4 +8,4 @@ curl -L http://127.0.0.1:4001/v2/keys/service_images/solr-m5nr/shock -XPUT -d va
 curl -L http://127.0.0.1:4001/v2/keys/service_images/mg-rast-v4-web/shock -XPUT -d value="shock.metagenomics.anl.gov/node/247d49e8-5699-4329-92cc-774a210b8dff"
 
 curl -L http://127.0.0.1:4001/v2/keys/service_images/awe-server/shock -XPUT -d value="shock.metagenomics.anl.gov/node/08be9757-bfdc-4c9e-961f-acb0ce1ecfef"
-
+curl -L http://127.0.0.1:4001/v2/keys/service_images/awe-client/shock -XPUT -d value="shock.metagenomics.anl.gov/node/49186e36-6e4c-4606-b4ca-86c9ebf28c49"
