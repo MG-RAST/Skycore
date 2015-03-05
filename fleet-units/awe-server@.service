@@ -1,4 +1,4 @@
-I
+[Unit]
 Description=AWE server (awe-server and mongo db run in their own containers)
 After=docker.service
 Requires=docker.service
@@ -19,10 +19,11 @@ ExecStartPre=mkdir -p /media/ephemeral/awe-server/ && /usr/bin/curl "https://raw
 
 
 # use -p ${COREOS_PRIVATE_IPV4}:80:80 instead of -p 80:80 ???
-ExecStart=/usr/bin/docker run --rm --name awe-server -p 80:80 -p 8001:8001 -v /media/ephemeral/awe-server/awe-server.cfg:/awe-config/awe-server.cfg -v /media/ephemeral/awe-server/data/:/mnt/data/awe/  --link=awe-server-mongodb:mongodb  skyport/awe-server-minimal:latest /usr/local/bin/awe-server --hosts=mongodb  --debuglevel=1 --conf=/awe-config/awe-server.cfg  --use_app_defs=yes --site-port=80 --api-port=8001 --api-url=http://${COREOS_PUBLIC_IPV4}:8001 --site-url=http://${COREOS_PUBLIC_IPV4}:80 --title=${TITLE} server
+ExecStart=/usr/bin/docker run --rm --name awe-server -p 80:80 -p 8001:8001 -v /media/ephemeral/awe-server/awe-server.cfg:/awe-config/awe-server.cfg -v /media/ephemeral/awe-server/data/:/mnt/data/awe/  --link=awe-server-mongodb:mongodb  skyport/awe-server-minimal:latest /usr/local/bin/awe-server --hosts=mongodb  --debuglevel=1 --conf=/awe-config/awe-server.cfg  --use_app_defs=yes --site-port=80 --api-port=8001 --api-url=http://${COREOS_PUBLIC_IPV4}:8001 --site-url=http://${COREOS_PUBLIC_IPV4}:80 --title=${TITLE}
 ExecStop=-/usr/bin/docker stop awe-server
 
 [X-Fleet]
 #Conflicts=awe-server@*.service
 # MachineID is only used for developing, will be removed later
 MachineID=1dc3558aa345483292f2f858de0e23e1
+#MachineMetadata=PUBLIC_IP=1
