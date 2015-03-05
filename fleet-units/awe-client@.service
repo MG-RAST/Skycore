@@ -1,0 +1,25 @@
+[Unit]
+Description=AWE client
+After=docker.service
+Requires=docker.service
+
+[Service]
+# service name:   awe-client
+# image name:     skyport/awe-client-minimal
+# container name: awe-client
+
+TimeoutStartSec=0
+EnvironmentFile=-/etc/environment
+
+
+ExecStartPre=-/usr/bin/docker kill awe-client
+ExecStartPre=-/usr/bin/docker rm awe-client
+ExecStartPre=/home/core/skycore pull --tag=latest etcd:awe-client
+ExecStartPre=mkdir -p /media/ephemeral/awe-client/
+
+# use -p ${COREOS_PRIVATE_IPV4}:80:80 instead of -p 80:80 ???
+ExecStart=/usr/bin/docker run --rm --name awe-client -v /media/ephemeral/awe-server/data/:/mnt/data/awe/   skyport/awe-client-minimal:latest /usr/local/bin/awe-client <args>
+ExecStop=-/usr/bin/docker stop awe-client
+
+[X-Fleet]
+Conflicts=awe-client@*.service
