@@ -1,0 +1,13 @@
+[Unit]
+Description=awe-server discovery
+BindsTo=awe-server@%i.service
+After=awe-server@%i.service
+
+
+[Service]
+EnvironmentFile=-/etc/environment
+ExecStart=/bin/sh -c "while true; do etcdctl set /services/awe-server/awe-server@%i \'{ \"host\":\"%H\",\"port\": 80,\"COREOS_PRIVATE_IPV4\":\"${COREOS_PRIVATE_IPV4}\",\"COREOS_PUBLIC_IPV4\":\"${COREOS_PUBLIC_IPV4}\"}\' --ttl 60 ; sleep 45 ; done"
+ExecStop=/usr/bin/etcdctl rm /services/awe-server/awe-server@%i
+
+[X-Fleet]
+MachineOf=awe-server@%i.service
