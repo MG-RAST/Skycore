@@ -19,7 +19,7 @@ ExecStartPre=/usr/bin/docker run -d --name awe-server-mongodb -v /media/ephemera
 
 ExecStartPre=mkdir -p /media/ephemeral/awe-server/ && /usr/bin/curl "https://raw.githubusercontent.com/wgerlach/AWE_develop/master/awe-server.cfg" > /media/ephemeral/awe-server/awe-server.cfg
 
-ExecStartPre=/usr/bin/sleep 3
+ExecStartPre=/usr/bin/sleep 10
 
 # use -p ${COREOS_PRIVATE_IPV4}:80:80 instead of -p 80:80 ???
 ExecStart=/usr/bin/docker run --rm --name awe-server -p 80:80 -p 8001:8001 -v /media/ephemeral/awe-server/awe-server.cfg:/awe-config/awe-server.cfg -v /media/ephemeral/awe-server/data/:/mnt/data/awe/  --link=awe-server-mongodb:mongodb  skyport/awe-server-minimal:latest /usr/local/bin/awe-server --title="Fleet powered AWE server" --debuglevel=1 -conf /awe-config/awe-server.cfg --hosts=mongodb --use_app_defs=yes --site-port=80 --api-port=8001 --api-url=http://${COREOS_PUBLIC_IPV4}:8001 --site-url=http://${COREOS_PUBLIC_IPV4}:80
