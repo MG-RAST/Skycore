@@ -16,12 +16,11 @@ ExecStartPre=-/usr/bin/docker kill awe-server-mongodb
 ExecStartPre=-/usr/bin/docker rm awe-server-mongodb
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:awe-server
 ExecStartPre=mkdir -p /media/ephemeral/awe-server/ && /usr/bin/curl "https://raw.githubusercontent.com/wgerlach/AWE_develop/master/awe-server.cfg" > /media/ephemeral/awe-server/awe-server.cfg
-ExecStartPre=/usr/bin/docker run -d --name awe-server-mongodb -v /media/ephemeral/awe-server/mongodb/:/data/db --expose=27017 dockerfile/mongodb 
+#ExecStartPre=/usr/bin/docker run -d --name awe-server-mongodb -v /media/ephemeral/awe-server/mongodb/:/data/db --expose=27017 dockerfile/mongodb 
 
-ExecStartPre=/usr/bin/sleep 30
 
 # use -p ${COREOS_PRIVATE_IPV4}:80:80 instead of -p 80:80 ???
-ExecStart=/usr/bin/docker run --rm --name awe-server -p 80:80 -p 8001:8001 -v /media/ephemeral/awe-server/awe-server.cfg:/awe-config/awe-server.cfg -v /media/ephemeral/awe-server/data/:/mnt/data/awe/  --link=awe-server-mongodb:mongodb  skyport/awe-server-minimal:latest /usr/local/bin/awe-server --title="Fleet powered AWE server" --debuglevel=1 -conf /awe-config/awe-server.cfg --hosts=mongodb --use_app_defs=yes --site-port=80 --api-port=8001 --api-url=http://${COREOS_PUBLIC_IPV4}:8001 --site-url=http://${COREOS_PUBLIC_IPV4}:80
+ExecStart=/usr/bin/docker run -d --name awe-server-mongodb -v /media/ephemeral/awe-server/mongodb/:/data/db --expose=27017 dockerfile/mongodb ; /usr/bin/docker run --rm --name awe-server -p 80:80 -p 8001:8001 -v /media/ephemeral/awe-server/awe-server.cfg:/awe-config/awe-server.cfg -v /media/ephemeral/awe-server/data/:/mnt/data/awe/  --link=awe-server-mongodb:mongodb  skyport/awe-server-minimal:latest /usr/local/bin/awe-server --title="Fleet powered AWE server" --debuglevel=1 -conf /awe-config/awe-server.cfg --hosts=mongodb --use_app_defs=yes --site-port=80 --api-port=8001 --api-url=http://${COREOS_PUBLIC_IPV4}:8001 --site-url=http://${COREOS_PUBLIC_IPV4}:80
 ExecStop=-/usr/bin/docker stop awe-server
 ExecStop=-/usr/bin/docker stop awe-server-mongodb
 
