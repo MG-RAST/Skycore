@@ -1,5 +1,5 @@
 [Unit]
-Description=AWE server MongoDB (awe-server and mongo db run in their own containers)
+Description=MongoDB for AWE server (use MachineID as argument !!!)
 After=docker.service
 Requires=docker.service
 
@@ -17,5 +17,5 @@ ExecStop=-/usr/bin/docker stop awe-server-mongodb
 
 [X-Fleet]
 #Conflicts=awe-server@*.service
-# MachineID is only used for developing, will be removed later
-MachineID=1dc3558aa345483292f2f858de0e23e1
+#MachineID=1dc3558aa345483292f2f858de0e23e1
+MachineID=%i
