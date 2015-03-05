@@ -165,3 +165,9 @@ Debugging:
 systemctl status -l service
 journalctl -b -u service
 ```
+
+## Starting services
+AWE server, uses MachineID as argument
+```bash
+fleetctl start awe-server{,-mongodb}@1dc3558aa345483292f2f858de0e23e1.service
+```
