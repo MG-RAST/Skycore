@@ -1,4 +1,4 @@
-I
+[Unit]
 Description=AWE server MongoDB (awe-server and mongo db run in their own containers)
 After=docker.service
 Requires=docker.service
