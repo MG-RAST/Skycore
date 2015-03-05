@@ -12,11 +12,11 @@ TimeoutStartSec=0
 EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill awe-server
 ExecStartPre=-/usr/bin/docker rm awe-server
-ExecStartPre=-/usr/bin/docker kill awe-server-mongodb
-ExecStartPre=-/usr/bin/docker rm awe-server-mongodb
+#ExecStartPre=-/usr/bin/docker kill awe-server-mongodb
+#ExecStartPre=-/usr/bin/docker rm awe-server-mongodb
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:awe-server
 ExecStartPre=mkdir -p /media/ephemeral/awe-server/ && /usr/bin/curl "https://raw.githubusercontent.com/wgerlach/AWE_develop/master/awe-server.cfg" > /media/ephemeral/awe-server/awe-server.cfg
-ExecStartPre=/usr/bin/docker run --rm --name awe-server-mongodb -v /media/ephemeral/awe-server/mongodb/:/data/db --expose=27017 dockerfile/mongodb 
+#ExecStartPre=/usr/bin/docker run --rm --name awe-server-mongodb -v /media/ephemeral/awe-server/mongodb/:/data/db --expose=27017 dockerfile/mongodb 
 
 ExecStartPre=/usr/bin/sleep 10
 
