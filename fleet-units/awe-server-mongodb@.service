@@ -1,6 +1,5 @@
 [Unit]
-# use MachineID as argument !!!
-Description=MongoDB for AWE server 
+Description=MongoDB for AWE server (instance: %i)
 After=docker.service
 Requires=docker.service
 
@@ -12,9 +11,11 @@ EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill awe-server-mongodb
 ExecStartPre=-/usr/bin/docker rm awe-server-mongodb
 
-ExecStart=/usr/bin/docker run --rm --name awe-server-mongodb -v /media/ephemeral/awe-server/mongodb/:/data/db --expose=27017 dockerfile/mongodb 
+ExecStartPre=/home/core/skycore pull --tag=latest etcd:awe-server-mongodb
+
+ExecStart=/usr/bin/docker run --rm --name awe-server-mongodb -v /media/ephemeral/awe-server-%i/mongodb/:/data/db --expose=27017 dockerfile/mongodb 
 
 ExecStop=-/usr/bin/docker stop awe-server-mongodb
 
 [X-Fleet]
-MachineID=%i
+#MachineID=
