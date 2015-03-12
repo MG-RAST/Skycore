@@ -171,3 +171,7 @@ AWE server, uses MachineID as argument
 ```bash
 fleetctl start awe-server{,-mongodb,-discovery}@1dc3558aa345483292f2f858de0e23e1.service
 ```
+AWE clients (use ranges)
+```bash
+for i in {2..4} ; do fleetctl start awe-client\@$i.service ; done
+```
