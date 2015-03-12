@@ -13,7 +13,7 @@ ExecStartPre=-/usr/bin/docker rm awe-server-mongodb
 
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:awe-server-mongodb
 
-ExecStart=/usr/bin/docker run --rm --name awe-server-mongodb -v /media/ephemeral/awe-server-%i/mongodb/:/data/db --expose=27017 dockerfile/mongodb 
+ExecStart=/usr/bin/docker run --rm --name awe-server-mongodb -v /media/ephemeral/awe-server-%i/mongodb/:/data/db --expose=27017 skyport/mongodb:2.4.9
 
 ExecStop=-/usr/bin/docker stop awe-server-mongodb
 
