@@ -10,7 +10,7 @@ curl -L http://127.0.0.1:4001/v2/keys/service_images/solr-m5nr/shock -XPUT -d va
 curl -L http://127.0.0.1:4001/v2/keys/service_images/mg-rast-v4-web/shock -XPUT -d value="shock.metagenomics.anl.gov/node/247d49e8-5699-4329-92cc-774a210b8dff"
 
 # AWE server
-curl -L http://127.0.0.1:4001/v2/keys/service_images/awe-server/shock -XPUT -d value="shock.metagenomics.anl.gov/node/e88a13a6-ab36-4ae3-aab2-5f09476f9556"
+curl -L http://127.0.0.1:4001/v2/keys/service_images/awe-server/shock -XPUT -d value="shock.metagenomics.anl.gov/node/a074d9fe-5c8e-4424-987b-d8ffc96da618"
 
 # AWE client
 curl -L http://127.0.0.1:4001/v2/keys/service_images/awe-client/shock -XPUT -d value="shock.metagenomics.anl.gov/node/49186e36-6e4c-4606-b4ca-86c9ebf28c49"
