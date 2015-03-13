@@ -10,14 +10,15 @@ Requires=docker.service
 
 TimeoutStartSec=0
 EnvironmentFile=-/etc/environment
-
+Environment='DATADIR=/media/ephemeral/awe-client'
 
 ExecStartPre=-/usr/bin/docker kill awe-client
 ExecStartPre=-/usr/bin/docker rm awe-client
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:awe-client
 ExecStartPre=mkdir -p /media/ephemeral/awe-client/
 
-ExecStart=/usr/bin/docker run --rm --name awe-client -v /var/run/docker.sock:/var/run/docker.sock -v /media/ephemeral/awe-server/data/:/mnt/data/awe/   skyport/awe-client-minimal:latest /usr/local/bin/awe-client --debuglevel 2 --serverurl=http://10.1.12.59:8001 --group=docker --supported_apps=* --auto_clean_dir=false 
+ExecStart=/usr/bin/docker run --rm --name awe-client -v /var/run/docker.sock:/var/run/docker.sock -v ${DATADIR}:${DATADIR}  skyport/awe-client-minimal:latest /usr/local/bin/awe-client --data=${DATADIR}/data --logs=${DATADIR}/logs --workpath=${DATADIR}/work --debuglevel 2 --serverurl=http://10.1.12.59:8001 --group=docker --supported_apps=* --auto_clean_dir=false 
+
 #2> /mnt/data/awe/logs/stderr.log 1> /mnt/data/awe/logs/stdout.log
 
 ExecStop=-/usr/bin/docker stop awe-client
