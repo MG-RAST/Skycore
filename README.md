@@ -6,7 +6,7 @@ Tool to push Docker images into Shock and pull from Shock. Preserves some metada
 Either use the Dockerfile in this repository to statically compile skycore (The Dockerfile contains some more comments), or download pre-compiled binary:
 
 ```bash
-wget http://dunkirk.mcs.anl.gov/~wgerlach/skycore
+wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
 ```
 
 ## Example deployment process for a fleet service using skycore
