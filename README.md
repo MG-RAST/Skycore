@@ -95,15 +95,17 @@ and copy the binary
 ```bash
 rm -f skycore ; wget http://dunkirk.mcs.anl.gov/~wgerlach/skycore
 chmod +x skycore
-for i in ${MACHINES} ; do scp -i <your_private_ssh_key> -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
+for i in ${MACHINES} ; do scp -i coreos.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
 ```
 
 ## Log in to your CoreOS cluster
 
 Login with forwarding your ssh user agent. Run these commands on your client outside of the CoreOS cluster:
 ```bash
+cd ~/.ssh 
+ln -s <your private key> coreos.pem
 eval $(ssh-agent)
-ssh-add <path to your private key>
+ssh-add coreos.pem
 ssh -A core@<instance>
 ```
 You may want to assign a public IP address to one of you CoreOS instances.
