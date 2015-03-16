@@ -95,7 +95,7 @@ and copy the binary
 ```bash
 rm -f skycore ; wget http://dunkirk.mcs.anl.gov/~wgerlach/skycore
 chmod +x skycore
-for i in ${MACHINES} ; do scp -i coreos.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
+for i in ${MACHINES} ; do scp -i ~/.ssh/coreos.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
 ```
 
 ## Log in to your CoreOS cluster
