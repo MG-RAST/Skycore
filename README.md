@@ -107,7 +107,7 @@ export MACHINES=`nova list --name my_coreos | grep -E -o "([0-9]{1,3}[\.]){3}[0-
 ```
 and copy the binary
 ```bash
-rm -f skycore ; wget http://dunkirk.mcs.anl.gov/~wgerlach/skycore
+rm -f skycore ; wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
 chmod +x skycore
 for i in ${MACHINES} ; do scp -i ~/.ssh/coreos.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
 ```
@@ -119,7 +119,7 @@ Login with forwarding your ssh user agent. Run these commands on your client out
 cd ~/.ssh 
 ln -s <your private key> coreos.pem
 eval $(ssh-agent)
-ssh-add coreos.pem
+ssh-add ~/.ssh/coreos.pem
 ssh -A core@<instance>
 ```
 You may want to assign a public IP address to one of you CoreOS instances.
