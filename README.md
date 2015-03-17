@@ -103,9 +103,13 @@ export MACHINES=`fleetctl list-machines --full --no-legend | cut -f 2 | tr '\n' 
 ```
 or b) from nova (I admit, this is ugly.)
 ```bash
-export MACHINES=`nova list --name my_coreos | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | tr '\n' ' '` ; echo ${MACHINES}
+export MACHINES=`nova list --name <my_coreos> | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | tr '\n' ' '` ; echo ${MACHINES}
 ```
-and copy the binary
+To get rid of the ssh warning "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED", you can run:
+```bash
+for i in ${MACHINES} ; do ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R ${i} ; done
+```
+Finally, copy the binary:
 ```bash
 rm -f skycore ; wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
 chmod +x skycore
