@@ -85,9 +85,23 @@ nova boot \
   my_coreos
 ```
 
+## Optional: Set up fleetctl locally to talk to cluster
+```bash
+wget https://github.com/coreos/fleet/releases/download/v0.9.1/fleet-v0.9.1-linux-amd64.tar.gz
+tar xvzf fleet-v0.9.1-linux-amd64.tar.gz
+cp fleet-v0.9.1-linux-amd64/fleetctl /usr/local/bin/
+
+#in your .bash_rc
+export FLEETCTL_TUNNEL=<ip address of one coreos instance>
+```
+
 ## Deploy the skycore binary on your CoreOS machines
 
-get IP addresses: (I admit, this is ugly.)
+get IP addresses: Either a) from fleetctl (if installed)
+```bash
+export MACHINES=`fleetctl list-machines --full --no-legend | cut -f 2 | tr '\n' ' '` ; echo ${MACHINES}
+```
+or b) from nova (I admit, this is ugly.)
 ```bash
 export MACHINES=`nova list --name my_coreos | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | tr '\n' ' '` ; echo ${MACHINES}
 ```
