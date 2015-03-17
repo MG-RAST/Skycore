@@ -1,0 +1,8 @@
+[Unit]
+Description=Global Test
+
+[Service]
+ExecStart=/usr/bin/true
+
+[X-Fleet]
+Global=true
