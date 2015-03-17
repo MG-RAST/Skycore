@@ -91,7 +91,7 @@ wget https://github.com/coreos/fleet/releases/download/v0.9.1/fleet-v0.9.1-linux
 tar xvzf fleet-v0.9.1-linux-amd64.tar.gz
 cp fleet-v0.9.1-linux-amd64/fleetctl /usr/local/bin/
 
-#in your .bash_rc
+#in your .bashrc
 export FLEETCTL_TUNNEL=<ip address of one coreos instance>
 ```
 
