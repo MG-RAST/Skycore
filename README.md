@@ -3,7 +3,7 @@
 Tool to push Docker images into Shock and pull from Shock. Preserves some metadata and uses etcd configuration to deploy Docker images.
 
 ## Get Skycore binary
-Either use the Dockerfile in this repository to statically compile skycore (The Dockerfile contains some more comments), or download pre-compiled binary:
+Either use the Dockerfile in this repository to statically compile skycore (The Dockerfile contains some more comments), or download pre-compiled binary (amd64):
 
 ```bash
 wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
@@ -84,20 +84,6 @@ nova boot \
   --security-groups default,coreos \
   my_coreos
 ```
-
-## Deploy the skycore binary on your CoreOS machines
-
-get IP addresses: (I admit, this is ugly.)
-```bash
-export MACHINES=`nova list --name my_coreos | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | tr '\n' ' '` ; echo ${MACHINES}
-```
-and copy the binary
-```bash
-rm -f skycore ; wget http://dunkirk.mcs.anl.gov/~wgerlach/skycore
-chmod +x skycore
-for i in ${MACHINES} ; do scp -i coreos.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
-```
-
 ## Log in to your CoreOS cluster
 
 Login with forwarding your ssh user agent. Run these commands on your client outside of the CoreOS cluster:
@@ -105,10 +91,41 @@ Login with forwarding your ssh user agent. Run these commands on your client out
 cd ~/.ssh 
 ln -s <your private key> coreos.pem
 eval $(ssh-agent)
-ssh-add coreos.pem
+ssh-add ~/.ssh/coreos.pem
 ssh -A core@<instance>
 ```
 You may want to assign a public IP address to one of you CoreOS instances.
+
+## Optional: Set up fleetctl locally to talk to cluster
+```bash
+wget https://github.com/coreos/fleet/releases/download/v0.9.1/fleet-v0.9.1-linux-amd64.tar.gz
+tar xvzf fleet-v0.9.1-linux-amd64.tar.gz
+cp fleet-v0.9.1-linux-amd64/fleetctl /usr/local/bin/
+
+#in your .bashrc
+export FLEETCTL_TUNNEL=<ip address of one coreos instance>
+```
+
+## Deploy the skycore binary on your CoreOS machines
+
+get IP addresses: Either a) from fleetctl (if installed)
+```bash
+export MACHINES=`fleetctl list-machines --full --no-legend | cut -f 2 | tr '\n' ' '` ; echo ${MACHINES}
+```
+or b) from nova (I admit, this is ugly.)
+```bash
+export MACHINES=`nova list --name <my_coreos> | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" | tr '\n' ' '` ; echo ${MACHINES}
+```
+To get rid of the ssh warning "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED", you can run:
+```bash
+for i in ${MACHINES} ; do ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R ${i} ; done
+```
+Finally, copy the binary:
+```bash
+rm -f skycore ; wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
+chmod +x skycore
+for i in ${MACHINES} ; do scp -i ~/.ssh/coreos.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
+```
 
 ## Docker image registration for services with etcd
 Once you have built and uploaded a new Docker image for a particular service to Shock, you need to update the etcd configuration to point to the new Shock node. To get access to etcd you probably have to log into one of the machines. The service name has to match the unit name, for example "mg-rast-v4-web":
