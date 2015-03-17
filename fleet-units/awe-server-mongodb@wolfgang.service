@@ -18,4 +18,4 @@ ExecStart=/usr/bin/docker run --rm --name awe-server-mongodb -v /media/ephemeral
 ExecStop=-/usr/bin/docker stop awe-server-mongodb
 
 [X-Fleet]
-MachineID=1dc3558aa345483292f2f858de0e23e1
+MachineID=739642c7ad1747a382cb1822e0ff2f53
