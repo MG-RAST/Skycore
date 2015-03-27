@@ -1,6 +1,7 @@
 [Unit]
 Description=AWE worker 
 # example:  for i in {2..4} ; do fleetctl start awe-client\@$i.service ; done
+# or: 	fleetctl start awe-client\@{2..4}.service
 After=docker.service
 Requires=docker.service
 
