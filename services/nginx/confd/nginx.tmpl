@@ -1,0 +1,27 @@
+# expected to be in /etc/confd/templates/nginx.tmpl
+
+
+upstream mg-rast-v4-web_pool {
+{{ range getvs "/service/mg-rast-v4-web/*"}}
+    server {{.}};
+    {{$data := json .Value}}
+       id: {{$data.host}}
+       ip: {{$data.COREOS_PRIVATE_IPV4}}
+
+{{end}}
+}
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server ipv6only=on;
+
+    access_log /var/log/nginx/access.log upstreamlog;
+
+    location / {
+        proxy_pass        http://mg-rast-v4-web_pool;
+        proxy_redirect    off;
+        proxy_set_header  Host             $host;
+        proxy_set_header  X-Real-IP        $remote_addr;
+        proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;
+   }
+}
