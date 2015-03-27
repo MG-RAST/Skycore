@@ -16,7 +16,7 @@ ExecStartPre=-/usr/bin/docker kill awe-server-%i
 ExecStartPre=-/usr/bin/docker rm awe-server-%i
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:awe-server
 ExecStartPre=/usr/bin/mkdir -p /media/ephemeral/awe-server-%i/
-ExecStartPre=/usr/bin/curl "https://raw.githubusercontent.com/wgerlach/AWE_develop/master/awe-server.cfg" > /media/ephemeral/awe-server-%i/awe-server.cfg
+ExecStartPre=/usr/bin/curl -o /media/ephemeral/awe-server-%i/awe-server.cfg https://raw.githubusercontent.com/wgerlach/AWE_develop/master/awe-server.cfg 
 
 
 # use -p ${COREOS_PRIVATE_IPV4}:80:80 instead of -p 80:80 ???
