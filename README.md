@@ -121,9 +121,10 @@ To get rid of the ssh warning "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED",
 for i in ${MACHINES} ; do ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R ${i} ; done
 ```
 
-Do some testing (read coreos version):
+Do some testing (read coreos version or openstack uuid):
 ```bash
 for i in ${MACHINES} ; do echo -n "$i: " ; ssh -i ~/.ssh/coreos.pem -o StrictHostKeyChecking=no core@${i} grep PRETTY /etc/os-release  ; done
+for i in ${MACHINES} ; do echo -n "$i: " ; ssh -i ~/.ssh/coreos.pem -o StrictHostKeyChecking=no core@${i} curl -s http://169.254.169.254/openstack/2013-10-17/meta_data.json | json_xs | grep uuid  ; done
 ```
 
 Finally, copy the binary:
