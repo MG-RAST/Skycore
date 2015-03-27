@@ -120,6 +120,12 @@ To get rid of the ssh warning "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED",
 ```bash
 for i in ${MACHINES} ; do ssh-keygen -f "/home/ubuntu/.ssh/known_hosts" -R ${i} ; done
 ```
+
+Do some testing (read coreos version):
+```bash
+for i in ${MACHINES} ; do echo -n "$i: " ; ssh -i ~/.ssh/coreos.pem -o StrictHostKeyChecking=no core@${i} grep PRETTY /etc/os-release  ; done
+```
+
 Finally, copy the binary:
 ```bash
 rm -f skycore ; wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
