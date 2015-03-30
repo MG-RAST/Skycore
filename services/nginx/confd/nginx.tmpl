@@ -3,11 +3,12 @@
 
 upstream mg-rast-v4-web_pool {
 {{ range gets "/services/mg-rast-v4-web/*"}}
-    server {{.Key}};
-    {{$data := json .Value}}
-       id: {{$data.host}}
-       ip: {{$data.COREOS_PRIVATE_IPV4}}
-
+	#
+	#instance: {{.Key}}
+	{{$data := json .Value}}
+	#id: {{$data.host}}
+	#ip: {{$data.COREOS_PRIVATE_IPV4}}
+	server {{$data.COREOS_PRIVATE_IPV4}}:80;
 {{end}}
 }
 
