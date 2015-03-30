@@ -13,8 +13,8 @@ upstream mg-rast-v4-web_pool {
 }
 
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server ipv6only=on;
+    listen 80 mg-rast-v4_server;
+    listen [::]:80 mg-rast-v4_server ipv6only=on;
 
     #access_log /var/log/nginx/access.log upstreamlog;
 
