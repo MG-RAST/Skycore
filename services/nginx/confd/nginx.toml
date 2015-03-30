@@ -10,7 +10,7 @@ dest = "/etc/nginx/sites-enabled/app.conf"
 
 # The etcd keys or directory to watch.  This is where the information to fill in
 # the template will come from.
-keys = [ "/service/mg-rast-v4-web" ]
+keys = [ "/services/mg-rast-v4-web" ]
 
 # File ownership and mode information
 owner = "root"
