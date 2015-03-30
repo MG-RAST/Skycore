@@ -18,7 +18,7 @@ server {
 
     #access_log /var/log/nginx/access.log upstreamlog;
 
-    location /v4 {
+    location / {
         proxy_pass        http://mg-rast-v4-web_pool;
         proxy_redirect    off;
         proxy_set_header  Host             $host;
