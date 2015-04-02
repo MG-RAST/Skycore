@@ -13,10 +13,12 @@ upstream mg-rast-v4-web_pool {
 }
 
 server {
-    listen 8003 ;
-    listen [::]:8003;
+    listen 80 ;
+    listen [::]:80;
 
     #access_log /var/log/nginx/access.log upstreamlog;
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
 
     location / {
         proxy_pass        http://mg-rast-v4-web_pool;
