@@ -5,7 +5,7 @@ FROM dockerfile/nginx
 RUN cd /root && git clone https://github.com/wgerlach/Skycore.git
 RUN rm -f /etc/nginx/nginx.conf /etc/nginx/sites-enabled/* ; \
 	ln -s /root/Skycore/services/nginx/nginx.conf /etc/nginx/nginx.conf ; \
-	rm -f /etc/nginx/default_server
+	rm -f /etc/nginx/sites-enabled/default
 	#ln -s /root/Skycore/services/nginx/default_server /etc/nginx/default_server
 
 
