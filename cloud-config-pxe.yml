@@ -44,6 +44,13 @@ write_files:
                     ExecStart=/usr/bin/timedatectl set-timezone America/Chicago
                     RemainAfterExit=yes
                     Type=oneshot
+                - name: media-ephemeral.mount
+                  command: start
+                  content: |
+                    [Mount]
+                    What=/dev/md0p2
+                    Where=/media/ephemeral
+                    Type=btrfs
     - path: /run/setup-environment.sh
       permissions: '0755'
       content: |
@@ -79,8 +86,37 @@ write_files:
 
         # Echo results of IP queries to environment file as soon as network interfaces 
         # get assigned IPs
-        echo COREOS_PUBLIC_IPV4=$(get_ip eno1) >> $ENV # Also assigned to same IP
-        echo COREOS_PRIVATE_IPV4=$(get_ip eno1) >> $ENV #eno1 should be changed to your device name
+        echo COREOS_PUBLIC_IPV4=$(get_ip enp2s0f0) >> $ENV # Also assigned to same IP
+        echo COREOS_PRIVATE_IPV4=$(get_ip enp2s0f0) >> $ENV #eno1 should be changed to your device name
+
+
+        # Setup drives
+
+        while [ ! -e /dev/sda ] ; do sleep 3; echo 'Waiting for /dev/sda'; done
+        while [ ! -e /dev/sdb ] ; do sleep 3; echo 'Waiting for /dev/sdb'; done
+
+        set -x
+
+        #mdadm with RAID1:
+        mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda /dev/sdb
+
+
+        #create first partition (swap,200G)
+        echo -e -n "g\nn\n1\n2048\n+200G\np\nt\n14\np\nw" | fdisk /dev/md0
+        sleep 3
+        #create second partition
+        echo -e -n "n\n2\n\n\np\nw" | fdisk /dev/md0
+
+        #Activate swap:
+        mkswap /dev/md0p1    # mkswap -c to check blocks, but very slow
+        swapon /dev/md0p1
+
+        #btrfs and mounting:
+        mkfs.btrfs -f /dev/md0p2
+        mkdir -p /media/ephemeral/
+        #mount /dev/md0p2  /media/ephemeral/
+
+
     - path: /run/prep-cloud-config.sh
       permissions: '0755'
       content: |
