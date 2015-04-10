@@ -8,7 +8,7 @@ NETWORK_INTERFACE=enp2s0f0
 
 
 # use template from local git repo or download if not exist
-if [ ! -e cloud-config-pxe.yml.template] 
+if [ ! -e cloud-config-pxe.yml.template ] 
 then
 	wget --no-check-certificate https://raw.githubusercontent.com/wgerlach/Skycore/master/cloud-config-pxe.yml.template 
 fi
