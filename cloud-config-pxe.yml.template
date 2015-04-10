@@ -86,6 +86,7 @@ write_files:
                     Type=oneshot
                     RemainAfterExit=yes
                     ExecStart=/usr/bin/mkdir -p /media/ephemeral/docker/ /media/ephemeral/tmp/
+                    ExecStart=/usr/bin/chmod 1777 /media/ephemeral/tmp/
                 - name: create_tmp.service
                   command: start
                   content: |
