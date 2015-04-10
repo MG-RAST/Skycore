@@ -94,7 +94,7 @@ write_files:
                         After=create_docker_directories.service
                         [Service]
                         Environment='TMPDIR=/media/ephemeral/docker_tmp/'
-                        Environment='DOCKER_OPTS="-g /media/ephemeral/docker"'
+                        Environment='DOCKER_OPTS="-g=/media/ephemeral/docker"'
                 - name: etcd.service
                   command: start
                 - name: fleet.service
