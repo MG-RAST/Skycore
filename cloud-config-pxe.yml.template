@@ -74,12 +74,6 @@ write_files:
                     What=/dev/md0p2
                     Where=/media/ephemeral
                     Type=btrfs
-                - path: /run/flannel_docker_opts.env 
-                  permissions: '0755'
-                  content: |
-                    #compare: /usr/lib/systemd/system/docker.service
-                    TMPDIR=/media/ephemeral/docker_tmp/
-                    DOCKER_OPTS="-g /media/ephemeral/docker"
                 - name: create_docker_directories.service
                   command: start
                   content: |
@@ -91,7 +85,16 @@ write_files:
                     Type=oneshot
                     RemainAfterExit=yes
                     ExecStart=/usr/bin/mkdir -p /media/ephemeral/docker/ /media/ephemeral/docker_tmp/
-                    #ExecStart=/usr/bin/mount -o bind /var/lib/docker /media/ephemeral/var_lib_docker/
+                - name: docker.service
+                  drop-ins:
+                    - name: 50-docker-location.conf
+                      content: |
+                        [Unit]
+                        Requires=create_docker_directories.service
+                        After=create_docker_directories.service
+                        [Service]
+                        Environment=TMPDIR='/media/ephemeral/docker_tmp/'
+                        Environment=DOCKER_OPTS='"-g /media/ephemeral/docker"'
                 - name: etcd.service
                   command: start
                 - name: fleet.service
