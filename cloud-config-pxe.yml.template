@@ -1,11 +1,12 @@
 #cloud-config
 
 
-# use update_cloud_config_pxe.sh to create config file from template !
+# This is only a template. Use update_cloud_config_pxe.sh to create the actual config file from this template. This template
+# requires ssh_authorized_keys , discovery_token and name of the network interface.
 
-# This is a two-stage config. The first stage extracts private and public IP address, then invokes the second stage which does the rest.
-# partially from https://github.com/coreos/coreos-cloudinit/issues/205#ref-issue-45810587
-# requires token, public keys, network interface
+# This is a two-stage config. The first stage extracts private and public IP address from ifconfig command and writes it to /etc/environment, 
+# the second stage does the usual cloud config stuff.
+# Initial version was from https://github.com/coreos/coreos-cloudinit/issues/205#ref-issue-45810587
 
 
 ssh_authorized_keys:
