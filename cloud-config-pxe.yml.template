@@ -1,0 +1,209 @@
+#cloud-config
+
+
+# from https://github.com/coreos/coreos-cloudinit/issues/205#ref-issue-45810587
+# requirs token, public keys, network interface
+
+# template variables:
+# [ssh_authorized_keys] e.g. "  - ssh-rsa XXXXX"
+# [network_interface] e.g. enp2s0f0 or eth0
+
+ssh_authorized_keys:
+[ssh_authorized_keys]
+
+write_files:
+    - path: /run/cloud-config.yml
+      permissions: '0644'
+      content: |
+        #cloud-config
+
+        coreos:
+            update:
+                reboot-strategy: etcd-lock
+            etcd:
+                # name: node001
+                # generate a new token for each unique cluster from https://discovery.etcd.io/new
+                discovery: https://discovery.etcd.io/your_token_here
+                # multi-region and multi-cloud deployments need to use $public_ipv4
+                addr: $_public_ipv4:4001
+                peer-addr: $_private_ipv4:7001
+            fleet:
+                public-ip: $_public_ipv4
+                # etcd-request-timeout: 15
+            units:
+                - name: settimezone.service
+                  command: start
+                  content: |
+                    [Unit]
+                    Description=Set the timezone
+                    [Service]
+                    ExecStart=/usr/bin/timedatectl set-timezone America/Chicago
+                    RemainAfterExit=yes
+                    Type=oneshot
+                - name: format-swap.service
+                  command: start
+                  content: |
+                    [Unit]
+                    Description=Formats the swap partition
+                    [Service]
+                    Type=oneshot
+                    RemainAfterExit=yes
+                    ExecStart=/usr/sbin/wipefs -f /dev/md0p1
+                    ExecStart=/usr/sbin/mkswap /dev/md0p1
+                    ExecStart=/usr/sbin/swapon /dev/md0p1
+                - name: format-ephemeral.service
+                  command: start
+                  content: |
+                    [Unit]
+                    Description=Formats the ephemeral partition
+                    [Service]
+                    Type=oneshot
+                    RemainAfterExit=yes
+                    ExecStart=/usr/sbin/wipefs -f /dev/md0p2
+                    ExecStart=/usr/sbin/mkfs.btrfs -f /dev/md0p2
+                    ExecStart=/usr/bin/mkdir -p /media/ephemeral/
+                - name: media-ephemeral.mount
+                  command: start
+                  content: |
+                    [Unit]
+                    Description=Mount ephemeral to /media/ephemeral
+                    Requires=format-ephemeral.service
+                    After=format-ephemeral.service
+                    Before=docker.service
+                    [Mount]
+                    What=/dev/md0p2
+                    Where=/media/ephemeral
+                    Type=btrfs
+                - path: /run/flannel_docker_opts.env
+                permissions: '0755'
+                content: |
+                  #compare: /usr/lib/systemd/system/docker.service
+                  TMPDIR=/media/ephemeral/docker_tmp/
+                  DOCKER_OPTS="-g /media/ephemeral/docker"
+                - name: create_docker_directories.service
+                  command: start
+                  content: |
+                    [Unit]
+                    Description=Create docker directories on /media/ephemeral
+                    Requires=media-ephemeral.mount
+                    After=media-ephemeral.mount
+                    [Service]
+                    Type=oneshot
+                    RemainAfterExit=yes
+                    ExecStart=/usr/bin/mkdir -p /media/ephemeral/docker/ /media/ephemeral/docker_tmp/
+                    #ExecStart=/usr/bin/mount -o bind /var/lib/docker /media/ephemeral/var_lib_docker/
+                - name: etcd.service
+                  command: start
+                - name: fleet.service
+                  command: start
+
+    - path: /run/setup-environment.sh
+      permissions: '0755'
+      content: |
+        #!/bin/bash
+
+        ENV="/etc/environment"
+
+        # Test for RW access to $1
+        touch $ENV
+        if [ $? -ne 0 ]; then
+            echo exiting, unable to modify: $ENV
+            exit 1
+        fi
+
+        # Setup environment target
+        sed -i -e '/^COREOS_PUBLIC_IPV4=/d' \
+            -e '/^COREOS_PRIVATE_IPV4=/d' \
+            "${ENV}"
+
+        # We spin loop until the the IP addresses are set
+        function get_ip () {
+            IF=$1
+            IP=
+            while [ 1 ]; do
+                IP=$(ifconfig $IF | awk '/inet / {print $2}')
+                if [ "$IP" != "" ]; then
+                    break
+                fi
+                sleep .1
+            done
+            echo $IP  
+        }
+
+        # Echo results of IP queries to environment file as soon as network interfaces 
+        # get assigned IPs
+        echo COREOS_PUBLIC_IPV4=$(get_ip [network_interface]) >> $ENV # Also assigned to same IP
+        echo COREOS_PRIVATE_IPV4=$(get_ip [network_interface]) >> $ENV #eno1 should be changed to your device name
+
+
+        # Setup drives
+
+        while [ ! -e /dev/md0p1 ] ; do sleep 3; echo 'Waiting for /dev/md0p1'; done
+        while [ ! -e /dev/md0p2 ] ; do sleep 3; echo 'Waiting for /dev/md0p2'; done
+
+
+    - path: /run/prep-cloud-config.sh
+      permissions: '0755'
+      content: |
+        #!/bin/bash
+
+        sed 's/\$_private/$private/g' /run/cloud-config.yml > /tmp/cconfigtmp
+        sed -i 's/\$_public/$public/g' /tmp/cconfigtmp
+        mv /tmp/cconfigtmp /run/cloud-config.yml
+#    - path: /etc/resolv.conf
+#      permissions: 0644
+#      owner: root
+#      content: |
+#        nameserver 192.168.1.1
+#        nameserver 8.8.8.8
+#        nameserver 8.8.4.4
+#        domain somedomain.local
+#hostname: coreos001
+#manage_etc_hosts: localhost
+coreos:
+  units:
+    - name: setup-environment.service
+      command: start
+      runtime: true
+      content: |
+        [Unit]
+        Description=Setup environment with private (and public) IP addresses
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/run/setup-environment.sh
+    - name: prep-cloud-config.service
+      command: start
+      runtime: true
+      content: |
+        [Unit]
+        Description=Re-write variables in cloud-config for proper expansion.
+        Requires=setup-environment.service
+        After=setup-environment.service
+        #Requires=user-cloudinit-proc-cmdline.service
+        #After=user-cloudinit-proc-cmdline.service
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/run/prep-cloud-config.sh
+    - name: second-stage-cloudinit.service
+      runtime: true
+      command: start
+      content: |
+        [Unit]
+        Description=Run coreos-cloudinit with actual cloud-config after environment has been set up
+        #Requires=setup-environment.service
+        #After=setup-environment.service
+        Requires=prep-cloud-config.service
+        After=prep-cloud-config.service
+        #Requires=user-cloudinit-proc-cmdline.service
+        #After=user-cloudinit-proc-cmdline.service
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        EnvironmentFile=/etc/environment
+        ExecStart=/usr/bin/coreos-cloudinit --from-file=/run/cloud-config.yml
+
