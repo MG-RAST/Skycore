@@ -85,7 +85,20 @@ write_files:
                     [Service]
                     Type=oneshot
                     RemainAfterExit=yes
-                    ExecStart=/usr/bin/mkdir -p /media/ephemeral/docker/ /media/ephemeral/docker_tmp/
+                    ExecStart=/usr/bin/mkdir -p /media/ephemeral/docker/ /media/ephemeral/tmp/
+                - name: create_tmp.service
+                  command: start
+                  content: |
+                    [Unit]
+                    Description=Create tmp
+                    Requires=media-ephemeral.mount
+                    After=media-ephemeral.mount
+                    [Service]
+                    Type=oneshot
+                    RemainAfterExit=yes
+                    ExecStart=/usr/bin/umount /tmp
+                    ExecStart=/usr/bin/rm -rf /tmp/
+                    ExecStart=/usr/bin/ln /media/ephemeral/tmp/ /tmp
                 - name: docker.service
                   drop-ins:
                     - name: 50-docker-location.conf
@@ -94,7 +107,7 @@ write_files:
                         Requires=create_docker_directories.service
                         After=create_docker_directories.service
                         [Service]
-                        Environment='TMPDIR=/media/ephemeral/docker_tmp/'
+                        Environment='TMPDIR=/media/ephemeral/tmp/'
                         Environment='DOCKER_OPTS="-g=/media/ephemeral/docker"'
                 - name: etcd.service
                   command: start
