@@ -1,29 +1,34 @@
 #cloud-config
 
 
-# from https://github.com/coreos/coreos-cloudinit/issues/205#ref-issue-45810587
-# requirs token, public keys, network interface
+# This is a two-stage config. The first stage extracts private and public IP address, then invokes the second stage which does the rest.
 
-# template variables:
-# [ssh_authorized_keys] e.g. "  - ssh-rsa XXXXX"
-# [network_interface] e.g. enp2s0f0 or eth0
+# partially from https://github.com/coreos/coreos-cloudinit/issues/205#ref-issue-45810587
+# requires token, public keys, network interface
+
+#
+# sed -e "s;%ssh_authorized_keys%;$(cat keys.yaml);g" -e "s;%network_interface%;enp2s0f0;g" -e "s;%discovery_token%;$(cat discovery_token.txt);g" cloud-config-pxe.yml.template > cloud-config-pxe.yml
+# template variables: %name%
+# ssh_authorized_keys    e.g. "  - ssh-rsa XXXXX"
+# network_interface      e.g. enp2s0f0 or eth0
+# discovery_token
 
 ssh_authorized_keys:
-[ssh_authorized_keys]
+%ssh_authorized_keys%
 
 write_files:
     - path: /run/cloud-config.yml
       permissions: '0644'
       content: |
         #cloud-config
-
+        # This is the second stage
         coreos:
             update:
                 reboot-strategy: etcd-lock
             etcd:
                 # name: node001
                 # generate a new token for each unique cluster from https://discovery.etcd.io/new
-                discovery: https://discovery.etcd.io/your_token_here
+                discovery: https://discovery.etcd.io/%discovery_token%
                 # multi-region and multi-cloud deployments need to use $public_ipv4
                 addr: $_public_ipv4:4001
                 peer-addr: $_private_ipv4:7001
@@ -74,12 +79,12 @@ write_files:
                     What=/dev/md0p2
                     Where=/media/ephemeral
                     Type=btrfs
-                - path: /run/flannel_docker_opts.env
-                permissions: '0755'
-                content: |
-                  #compare: /usr/lib/systemd/system/docker.service
-                  TMPDIR=/media/ephemeral/docker_tmp/
-                  DOCKER_OPTS="-g /media/ephemeral/docker"
+                - path: /run/flannel_docker_opts.env 
+                  permissions: '0755'
+                  content: |
+                    #compare: /usr/lib/systemd/system/docker.service
+                    TMPDIR=/media/ephemeral/docker_tmp/
+                    DOCKER_OPTS="-g /media/ephemeral/docker"
                 - name: create_docker_directories.service
                   command: start
                   content: |
@@ -132,11 +137,11 @@ write_files:
 
         # Echo results of IP queries to environment file as soon as network interfaces 
         # get assigned IPs
-        echo COREOS_PUBLIC_IPV4=$(get_ip [network_interface]) >> $ENV # Also assigned to same IP
-        echo COREOS_PRIVATE_IPV4=$(get_ip [network_interface]) >> $ENV #eno1 should be changed to your device name
+        echo COREOS_PUBLIC_IPV4=$(get_ip %network_interface%) >> $ENV # Also assigned to same IP
+        echo COREOS_PRIVATE_IPV4=$(get_ip %network_interface%) >> $ENV #eno1 should be changed to your device name
 
 
-        # Setup drives
+        # wait for array partitions
 
         while [ ! -e /dev/md0p1 ] ; do sleep 3; echo 'Waiting for /dev/md0p1'; done
         while [ ! -e /dev/md0p2 ] ; do sleep 3; echo 'Waiting for /dev/md0p2'; done
@@ -160,6 +165,7 @@ write_files:
 #        domain somedomain.local
 #hostname: coreos001
 #manage_etc_hosts: localhost
+# This is the first stage
 coreos:
   units:
     - name: setup-environment.service
