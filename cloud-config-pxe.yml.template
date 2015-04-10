@@ -1,17 +1,12 @@
 #cloud-config
 
 
-# This is a two-stage config. The first stage extracts private and public IP address, then invokes the second stage which does the rest.
+# use update_cloud_config_pxe.sh to create config file from template !
 
+# This is a two-stage config. The first stage extracts private and public IP address, then invokes the second stage which does the rest.
 # partially from https://github.com/coreos/coreos-cloudinit/issues/205#ref-issue-45810587
 # requires token, public keys, network interface
 
-#
-# sed -e "s;%ssh_authorized_keys%;$(cat keys.yaml);g" -e "s;%network_interface%;enp2s0f0;g" -e "s;%discovery_token%;$(cat discovery_token.txt);g" cloud-config-pxe.yml.template > cloud-config-pxe.yml
-# template variables: %name%
-# ssh_authorized_keys    e.g. "  - ssh-rsa XXXXX"
-# network_interface      e.g. enp2s0f0 or eth0
-# discovery_token
 
 ssh_authorized_keys:
 %ssh_authorized_keys%
