@@ -98,7 +98,7 @@ write_files:
                     RemainAfterExit=yes
                     ExecStart=/usr/bin/umount /tmp
                     ExecStart=/usr/bin/rm -rf /tmp/
-                    ExecStart=/usr/bin/ln /media/ephemeral/tmp/ /tmp
+                    ExecStart=/usr/bin/ln -s /media/ephemeral/tmp/ /tmp
                 - name: docker.service
                   drop-ins:
                     - name: 50-docker-location.conf
