@@ -45,7 +45,7 @@ write_files:
                   command: start
                   content: |
                     [Unit]
-                    Description=Formats the swap partition
+                    Description=Activates swap partition
                     [Service]
                     Type=oneshot
                     RemainAfterExit=yes
@@ -54,14 +54,14 @@ write_files:
                     ExecStart=/usr/sbin/swapon /dev/md0p1
                 - name: format-ephemeral.service
                   command: start
-                  content: |
+                 content: |
                     [Unit]
                     Description=Formats the ephemeral partition
                     [Service]
                     Type=oneshot
                     RemainAfterExit=yes
-                    ExecStart=/usr/sbin/wipefs -f /dev/md0p2
-                    ExecStart=/usr/sbin/mkfs.btrfs -f /dev/md0p2
+#                    ExecStart=/usr/sbin/wipefs -f /dev/md0p2
+#                    ExecStart=/usr/sbin/mkfs.btrfs -f /dev/md0p2
                     ExecStart=/usr/bin/mkdir -p /media/ephemeral/
                 - name: media-ephemeral.mount
                   command: start
@@ -100,6 +100,7 @@ write_files:
                     ExecStart=/usr/bin/umount /tmp
                     ExecStart=/usr/bin/rm -rf /tmp/
                     ExecStart=/usr/bin/ln -s /media/ephemeral/tmp/ /tmp
+                - path     
                 - name: docker.service
                   drop-ins:
                     - name: 50-docker-location.conf
@@ -153,6 +154,13 @@ write_files:
         echo COREOS_PUBLIC_IPV4=$(get_ip %network_interface%) >> $ENV # Also assigned to same IP
         echo COREOS_PRIVATE_IPV4=$(get_ip %network_interface%) >> $ENV #eno1 should be changed to your device name
 
+        #fleet metadata:
+        RAM_GB=`awk '/MemTotal/ {printf( "%.0f\n", $2 / (1024*1024) )}' /proc/meminfo`
+        CORES=`nproc --all`
+        mkdir -p /etc/fleet/
+        echo metatadata=\"RAM_GB=${RAM_GB},CORES=${CORES}\" >> /etc/fleet/fleet.conf
+
+        
 
         # wait for array partitions
 
