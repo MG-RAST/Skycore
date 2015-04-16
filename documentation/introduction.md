@@ -38,7 +38,7 @@ Starting a service:
 https://github.com/wgerlach/Skycore/blob/master/documentation/fleet_service_deployment.md
 
 
-## Create CoreoOS cluster in OpenStack
+## Create CoreOS cluster in OpenStack
 
 https://github.com/wgerlach/Skycore/blob/master/documentation/set_up_coreos_cluster_in_openstack.md
 
