@@ -21,6 +21,10 @@ Upload image to Shock and register in etcd (this example uses another service):
 
 https://github.com/wgerlach/Skycore#example-deployment-process-for-a-fleet-service-using-skycore
 
+Script to register all services in MG-RAST:
+
+https://github.com/wgerlach/Skycore/blob/master/register_docker_image_for_service_all.sh
+
 Fleet unit:
 
 https://github.com/wgerlach/Skycore/blob/master/fleet-units/mg-rast-v4-web%40.service
