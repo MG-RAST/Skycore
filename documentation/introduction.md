@@ -38,3 +38,25 @@ Starting a service:
 https://github.com/wgerlach/Skycore/blob/master/documentation/fleet_service_deployment.md
 
 
+## Create CoreoOS cluster in OpenStack
+
+https://github.com/wgerlach/Skycore/blob/master/documentation/set_up_coreos_cluster_in_openstack.md
+
+
+## Create CoreOS cluster with PXE-boot
+
+Create RAID1 with btrfs partition:
+
+https://github.com/wgerlach/Skycore/blob/master/documentation/pxe-boot-array-setup.md
+
+Script to create cloud-config from template:
+
+https://github.com/wgerlach/Skycore/blob/master/cloud-config/update_cloud_config_pxe.sh
+
+Cloud-config template file. Use update_cloud_config_pxe.sh to create actual cloud-config file. This is a two-step cloud-config file:
+
+https://github.com/wgerlach/Skycore/blob/master/cloud-config/cloud-config-pxe.yml.template
+
+
+
+
