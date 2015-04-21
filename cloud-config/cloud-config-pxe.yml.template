@@ -49,39 +49,12 @@ write_files:
                     [Service]
                     Type=oneshot
                     RemainAfterExit=yes
-#                    ExecStart=/usr/sbin/wipefs -f /dev/md0p1
-#                    ExecStart=/usr/sbin/mkswap /dev/md0p1
                     ExecStart=/usr/sbin/swapon /dev/md0p1
-                - name: format-ephemeral.service
-                  command: start
-                 content: |
-                    [Unit]
-                    Description=Formats the ephemeral partition
-                    [Service]
-                    Type=oneshot
-                    RemainAfterExit=yes
-#                    ExecStart=/usr/sbin/wipefs -f /dev/md0p2
-#                    ExecStart=/usr/sbin/mkfs.btrfs -f /dev/md0p2
-                    ExecStart=/usr/bin/mkdir -p /media/ephemeral/
-                - name: media-ephemeral.mount
-                  command: start
-                  content: |
-                    [Unit]
-                    Description=Mount ephemeral to /media/ephemeral
-                    Requires=format-ephemeral.service
-                    After=format-ephemeral.service
-                    Before=docker.service
-                    [Mount]
-                    What=/dev/md0p2
-                    Where=/media/ephemeral
-                    Type=btrfs
                 - name: create_docker_directories.service
                   command: start
                   content: |
                     [Unit]
                     Description=Create docker directories on /media/ephemeral
-                    Requires=media-ephemeral.mount
-                    After=media-ephemeral.mount
                     [Service]
                     Type=oneshot
                     RemainAfterExit=yes
@@ -91,16 +64,13 @@ write_files:
                   command: start
                   content: |
                     [Unit]
-                    Description=Create tmp
-                    Requires=media-ephemeral.mount
-                    After=media-ephemeral.mount
+                    Description=Create /media/ephemeral/tmp/
                     [Service]
                     Type=oneshot
                     RemainAfterExit=yes
                     ExecStart=/usr/bin/umount /tmp
                     ExecStart=/usr/bin/rm -rf /tmp/
-                    ExecStart=/usr/bin/ln -s /media/ephemeral/tmp/ /tmp
-                - path     
+                    ExecStart=/usr/bin/ln -s /media/ephemeral/tmp/ /tmp    
                 - name: docker.service
                   drop-ins:
                     - name: 50-docker-location.conf
@@ -166,6 +136,34 @@ write_files:
 
         while [ ! -e /dev/md0p1 ] ; do sleep 3; echo 'Waiting for /dev/md0p1'; done
         while [ ! -e /dev/md0p2 ] ; do sleep 3; echo 'Waiting for /dev/md0p2'; done
+
+       # wipe filesystem if mount fails or "keep_filesystem" does not exist
+        WIPE_FS=0
+         # try to mount
+        /usr/bin/mount -t btrfs /dev/md0p2 /media/ephemeral/
+        if [ $? -eq 0]; then
+            WIPE_FS=1
+        fi
+        if [ ! -e  /media/ephemeral/keep_filesystem] ; then
+            WIPE_FS=1
+            /usr/bin/umount /media/ephemeral/
+        fi
+        
+        if [ ${WIPE_FS} -eq 1 ] 
+            /usr/sbin/wipefs -f /dev/md0p1
+            /usr/sbin/wipefs -f /dev/md0p2
+            
+            /usr/sbin/mkswap /dev/md0p1
+            /usr/sbin/mkfs.btrfs -f /dev/md0p2
+            
+            /usr/bin/mount -t btrfs /dev/md0p2 /media/ephemeral/
+            if [ $? -eq 0]; then
+                # mounted
+                echo "delete this file to wipe filesystem on next boot" > /media/ephemeral/keep_filesystem
+            else    
+                echo "Error: Could not create filesystem"
+            fi
+        fi
 
 
     - path: /run/prep-cloud-config.sh
