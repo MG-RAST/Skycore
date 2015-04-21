@@ -137,7 +137,7 @@ write_files:
         while [ ! -e /dev/md0p1 ] ; do sleep 3; echo 'Waiting for /dev/md0p1'; done
         while [ ! -e /dev/md0p2 ] ; do sleep 3; echo 'Waiting for /dev/md0p2'; done
 
-       # wipe filesystem if mount fails or "keep_filesystem" does not exist
+        # wipe filesystem if mount fails or "keep_filesystem" does not exist
         WIPE_FS=0
          # try to mount
         /usr/bin/mount -t btrfs /dev/md0p2 /media/ephemeral/
