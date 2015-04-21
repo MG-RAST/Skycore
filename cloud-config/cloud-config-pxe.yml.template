@@ -142,15 +142,16 @@ write_files:
         mkdir -p /media/ephemeral/
          # try to mount
         /usr/bin/mount -t btrfs /dev/md0p2 /media/ephemeral/
-        if [ $? -eq 0]; then
+        if [ $? -eq 0 ]; then
             WIPE_FS=1
         fi
-        if [ ! -e  /media/ephemeral/keep_filesystem] ; then
+        if [ ! -e  /media/ephemeral/keep_filesystem ] ; then
             WIPE_FS=1
             /usr/bin/umount /media/ephemeral/
         fi
         
         if [ ${WIPE_FS} -eq 1 ] ; then
+            echo "creating file systems"
             /usr/sbin/wipefs -f /dev/md0p1
             /usr/sbin/wipefs -f /dev/md0p2
             
@@ -159,7 +160,7 @@ write_files:
             
             
             /usr/bin/mount -t btrfs /dev/md0p2 /media/ephemeral/
-            if [ $? -eq 0]; then
+            if [ $? -eq 0 ]; then
                 # mounted
                 echo "delete this file to wipe filesystem on next boot" > /media/ephemeral/keep_filesystem
             else    
