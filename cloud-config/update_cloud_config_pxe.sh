@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 set -x
 
 PUBLIC_KEYS=$(cat keys.yaml| sed ':a;N;$!ba;s/\n/\\n/g')
@@ -10,6 +9,9 @@ NETWORK_INTERFACE=enp2s0f0
 # use template from local git repo or download
 git rev-parse --is-inside-work-tree > /dev/null 2>&1 
 IS_GIT_DIR=$?
+
+set -e
+
 
 if [ ${IS_GIT_DIR} -eq 1 ] 
 then
