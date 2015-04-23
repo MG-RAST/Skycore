@@ -82,6 +82,12 @@ write_files:
                         Environment='TMPDIR=/media/ephemeral/tmp/'
                         Environment='DOCKER_OPTS="-g=/media/ephemeral/docker"'
                 - name: etcd.service
+                  drop-ins:
+				    # this is required because pxe-booting would create new ETCD instance names on boot.
+                    - name: 51-etcd-name.conf
+                      content: |
+                        [Service]
+                        Environment="ETCD_NAME=INSTANCE_$_public_ipv4"
                   command: start
                 - name: fleet.service
                   command: start
