@@ -22,7 +22,8 @@ write_files:
             update:
                 reboot-strategy: etcd-lock
             etcd:
-                # name: node001
+                # name this is required because pxe-booting would create new ETCD instance names on boot.
+                name: node_$_public_ipv4_$_private_ipv4
                 # generate a new token for each unique cluster from https://discovery.etcd.io/new
                 discovery: https://discovery.etcd.io/%discovery_token%
                 # multi-region and multi-cloud deployments need to use $public_ipv4
@@ -82,12 +83,6 @@ write_files:
                         Environment='TMPDIR=/media/ephemeral/tmp/'
                         Environment='DOCKER_OPTS="-g=/media/ephemeral/docker"'
                 - name: etcd.service
-                  drop-ins:
-				    # this is required because pxe-booting would create new ETCD instance names on boot.
-                    - name: 51-etcd-name.conf
-                      content: |
-                        [Service]
-                        Environment="ETCD_NAME=INSTANCE_$_public_ipv4"
                   command: start
                 - name: fleet.service
                   command: start
