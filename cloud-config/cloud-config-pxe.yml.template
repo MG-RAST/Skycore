@@ -20,10 +20,10 @@ write_files:
         # This is the second stage
         coreos:
             update:
-                reboot-strategy: etcd-lock
+                reboot-strategy: none
             etcd:
                 # name this is required because pxe-booting would create new ETCD instance names on boot.
-                name: node_$_public_ipv4_$_private_ipv4
+                #name: node_$_public_ipv4_$_private_ipv4
                 # generate a new token for each unique cluster from https://discovery.etcd.io/new
                 discovery: https://discovery.etcd.io/%discovery_token%
                 # multi-region and multi-cloud deployments need to use $public_ipv4
@@ -86,7 +86,6 @@ write_files:
                   command: start
                 - name: fleet.service
                   command: start
-
     - path: /run/setup-environment.sh
       permissions: '0755'
       content: |
@@ -135,8 +134,8 @@ write_files:
 
         # wait for array partitions
 
-        while [ ! -e /dev/md0p1 ] ; do sleep 3; echo 'Waiting for /dev/md0p1'; done
-        while [ ! -e /dev/md0p2 ] ; do sleep 3; echo 'Waiting for /dev/md0p2'; done
+        if [ ! -e /dev/md0p1 ] ; then sleep 3; echo 'Waiting for /dev/md0p1'; fi
+        if [ ! -e /dev/md0p2 ] ; then sleep 3; echo 'Waiting for /dev/md0p2'; fi
 
         # wipe filesystem if mount fails or "keep_filesystem" does not exist
         WIPE_FS=0
