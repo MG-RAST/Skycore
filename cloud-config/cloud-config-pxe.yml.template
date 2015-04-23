@@ -126,7 +126,7 @@ write_files:
         echo COREOS_PUBLIC_IPV4=${COREOS_PUBLIC_IPV4} >> $ENV # Also assigned to same IP
         echo COREOS_PRIVATE_IPV4=${COREOS_PRIVATE_IPV4} >> $ENV #eno1 should be changed to your device name
 
-        ETCD_NAME=node_${COREOS_PUBLIC_IPV4}_${COREOS_PRIVATE_IPV4}
+        ETCD_NAME="node_${COREOS_PUBLIC_IPV4}_${COREOS_PRIVATE_IPV4}"
         echo ETCD_NAME=${ETCD_NAME} >> $ENV
 
         #fleet metadata:
@@ -181,8 +181,7 @@ write_files:
         source /etc/environment
         
         sed 's/\$_private/$private/g' /run/cloud-config.yml > /tmp/cconfigtmp
-        sed -i 's/\$_public/$public/g' /tmp/cconfigtmp
-        sed -i 's/\$ETCD_NAME/${ETCD_NAME}/g' /tmp/cconfigtmp
+        sed -i 's/\$_public/$public/g' 's/\$ETCD_NAME/${ETCD_NAME}/g' /tmp/cconfigtmp
         mv /tmp/cconfigtmp /run/cloud-config.yml
 #    - path: /etc/resolv.conf
 #      permissions: 0644
