@@ -128,7 +128,7 @@ write_files:
 
         ETCD_NAME="node_${COREOS_PUBLIC_IPV4}_${COREOS_PRIVATE_IPV4}"
         echo ETCD_NAME=${ETCD_NAME} >> $ENV
-        sed -i 's/\$ETCD_NAME/'${ETCD_NAME}'/g' /run/cloud-config.yml > /tmp/cconfigtmp
+        sed 's/\$ETCD_NAME/'${ETCD_NAME}'/g' /run/cloud-config.yml > /tmp/cconfigtmp
         mv /tmp/cconfigtmp /run/cloud-config.yml
 
         #fleet metadata:
