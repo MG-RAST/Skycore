@@ -119,6 +119,19 @@ write_files:
             echo $IP  
         }
 
+        function get_mac () {
+            IF=$1
+            MAC=
+            while [ 1 ]; do
+                MAC=$(ifconfig $IF | awk '/ether / {print $2}')
+                if [ "$MAC" != "" ]; then
+                    break
+                fi
+                sleep .1
+            done
+            echo $MAC  
+        }
+
         # Echo results of IP queries to environment file as soon as network interfaces 
         # get assigned IPs
         COREOS_PUBLIC_IPV4=$(get_ip %network_interface%)
@@ -126,7 +139,7 @@ write_files:
         echo COREOS_PUBLIC_IPV4=${COREOS_PUBLIC_IPV4} >> $ENV # Also assigned to same IP
         echo COREOS_PRIVATE_IPV4=${COREOS_PRIVATE_IPV4} >> $ENV #eno1 should be changed to your device name
 
-        ETCD_NAME="node_${COREOS_PUBLIC_IPV4}_${COREOS_PRIVATE_IPV4}"
+        ETCD_NAME=node_$(get_mac %network_interface%)
         echo ETCD_NAME=${ETCD_NAME} >> $ENV
         sed 's/\$ETCD_NAME/'${ETCD_NAME}'/g' /run/cloud-config.yml > /tmp/cconfigtmp
         mv /tmp/cconfigtmp /run/cloud-config.yml
