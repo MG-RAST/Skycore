@@ -121,13 +121,13 @@ write_files:
 
         # Echo results of IP queries to environment file as soon as network interfaces 
         # get assigned IPs
-		COREOS_PUBLIC_IPV4=$(get_ip %network_interface%)
-		COREOS_PRIVATE_IPV4=$(get_ip %network_interface%)
+        COREOS_PUBLIC_IPV4=$(get_ip %network_interface%)
+        COREOS_PRIVATE_IPV4=$(get_ip %network_interface%)
         echo COREOS_PUBLIC_IPV4=${COREOS_PUBLIC_IPV4} >> $ENV # Also assigned to same IP
         echo COREOS_PRIVATE_IPV4=${COREOS_PRIVATE_IPV4} >> $ENV #eno1 should be changed to your device name
 
-		ETCD_NAME=node_${COREOS_PUBLIC_IPV4}_${COREOS_PRIVATE_IPV4}
-		echo ETCD_NAME=${ETCD_NAME} >> $ENV
+        ETCD_NAME=node_${COREOS_PUBLIC_IPV4}_${COREOS_PRIVATE_IPV4}
+        echo ETCD_NAME=${ETCD_NAME} >> $ENV
 
         #fleet metadata:
         RAM_GB=`awk '/MemTotal/ {printf( "%.0f\n", $2 / (1024*1024) )}' /proc/meminfo`
@@ -178,12 +178,12 @@ write_files:
       permissions: '0755'
       content: |
         #!/bin/bash
-		source /etc/environment
-		
+        source /etc/environment
+        
         sed 's/\$_private/$private/g' /run/cloud-config.yml > /tmp/cconfigtmp
         sed -i 's/\$_public/$public/g' /tmp/cconfigtmp
         sed -i 's/\$ETCD_NAME/${ETCD_NAME}/g' /tmp/cconfigtmp
-		mv /tmp/cconfigtmp /run/cloud-config.yml
+        mv /tmp/cconfigtmp /run/cloud-config.yml
 #    - path: /etc/resolv.conf
 #      permissions: 0644
 #      owner: root
