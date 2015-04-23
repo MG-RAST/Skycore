@@ -128,6 +128,8 @@ write_files:
 
         ETCD_NAME="node_${COREOS_PUBLIC_IPV4}_${COREOS_PRIVATE_IPV4}"
         echo ETCD_NAME=${ETCD_NAME} >> $ENV
+		sed -i 's/\$ETCD_NAME/${ETCD_NAME}/g' /run/cloud-config.yml > /tmp/cconfigtmp
+		mv /tmp/cconfigtmp /run/cloud-config.yml
 
         #fleet metadata:
         RAM_GB=`awk '/MemTotal/ {printf( "%.0f\n", $2 / (1024*1024) )}' /proc/meminfo`
@@ -178,11 +180,10 @@ write_files:
       permissions: '0755'
       content: |
         #!/bin/bash
-        source /etc/environment
         
         sed 's/\$_private/$private/g' /run/cloud-config.yml > /tmp/cconfigtmp
         sed -i 's/\$_public/$public/g' /tmp/cconfigtmp
-        sed -i 's/\$ETCD_NAME/${ETCD_NAME}/g' /tmp/cconfigtmp
+        
         mv /tmp/cconfigtmp /run/cloud-config.yml
 #    - path: /etc/resolv.conf
 #      permissions: 0644
