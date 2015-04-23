@@ -181,7 +181,8 @@ write_files:
         source /etc/environment
         
         sed 's/\$_private/$private/g' /run/cloud-config.yml > /tmp/cconfigtmp
-        sed -i 's/\$_public/$public/g' 's/\$ETCD_NAME/${ETCD_NAME}/g' /tmp/cconfigtmp
+        sed -i 's/\$_public/$public/g' /tmp/cconfigtmp
+        sed -i 's/\$ETCD_NAME/${ETCD_NAME}/g' /tmp/cconfigtmp
         mv /tmp/cconfigtmp /run/cloud-config.yml
 #    - path: /etc/resolv.conf
 #      permissions: 0644
