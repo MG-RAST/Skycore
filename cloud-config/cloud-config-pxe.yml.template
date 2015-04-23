@@ -20,7 +20,7 @@ write_files:
         # This is the second stage
         coreos:
             update:
-                reboot-strategy: none
+                reboot-strategy: off
             etcd:
                 # name this is required because pxe-booting would create new ETCD instance names on boot.
                 #name: node_$_public_ipv4_$_private_ipv4
