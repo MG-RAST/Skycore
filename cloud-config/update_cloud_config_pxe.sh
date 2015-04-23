@@ -16,7 +16,7 @@ IS_GIT_DIR=$?
 set -e
 
 
-if [ ${IS_GIT_DIR} -eq 1 ] 
+if [ ${IS_GIT_DIR} -eq 0 ] 
 then
 	git pull
 else 
