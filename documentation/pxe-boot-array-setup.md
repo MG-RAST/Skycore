@@ -54,10 +54,10 @@ set -x
 set -e
 
 #wipe GPT stuff
-echo -e -n "x\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sda
+echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sda
 sleep 1
 
-echo -e -n "x\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sdb
+echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sdb
 sleep 1
 
 #create RAID1
