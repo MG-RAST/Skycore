@@ -91,7 +91,7 @@ write_files:
       content: |
         #!/bin/bash
 
-        mdadm --stop /dev/md0
+        #mdadm --stop /dev/md0
 
         ENV="/etc/environment"
 
