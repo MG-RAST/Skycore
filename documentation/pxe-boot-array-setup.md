@@ -53,7 +53,7 @@ raid1.sh
 set -x
 set -e
 
-#wipe GPT stuff
+#wipe GPT stuff (2 for "Found invalid MBR and corrupt GPT")
 echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sda
 sleep 1
 
