@@ -5,19 +5,21 @@ This are instructions to create an mdadm RAID1 (mirror) with swap and btrfs part
 
 ## Remove existing RAID
 
+wipe_raid.sh
 ```bash
+#!/bin/bash
+set -x
+
 umount /media/ephemeral/
 swapoff /dev/md0p1
-```
+set -e
 
-```bash
 mdadm --stop /dev/md0
 mdadm --remove /dev/md0
 
 mdadm --zero-superblock /dev/sda
 mdadm --zero-superblock /dev/sdb
 ```
-
 
 
 ## Remove LVM
