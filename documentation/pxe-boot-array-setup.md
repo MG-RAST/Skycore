@@ -125,7 +125,7 @@ Multiple machines:
 ```bash
 export MACHINES=`eval echo "{1..8} {10..11}"` ; echo ${MACHINES}
 # test ssh
-for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} grep PRETTY /etc/os-release ; done
+for i in ${MACHINES} ; do echo "$i: " ; ssh -o ConnectTimeout=1 -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} grep PRETTY /etc/os-release ; done
 # copy lvm_wipe.sh
 for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem lvm_wipe.sh core@bio-worker${i}: ; done
 # execute lvm_wipe.sh
@@ -135,7 +135,7 @@ for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pe
 #remove keys:
 for i in ${MACHINES} ; do echo "$i: " ; ssh-keygen -f "/homes/wgerlach/.ssh/known_hosts" -R bio-worker${i} ; done
 #test again ssh
-for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} grep PRETTY /etc/os-release ; done
+for i in ${MACHINES} ; do echo "$i: " ; ssh -o ConnectTimeout=1 -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} grep PRETTY /etc/os-release ; done
 #copy raid1.sh
 for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem raid1.sh core@bio-worker${i}: ; done
 # execute raid1.sh
