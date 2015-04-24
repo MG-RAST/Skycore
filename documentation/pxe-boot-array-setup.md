@@ -92,6 +92,8 @@ for device in /dev/sda /dev/sdb ; do
 done
 sleep 2
 
+# seems to require reboot here, because resource is busy. not sure where that comes from
+
 mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda /dev/sdb
 sleep 3
 
