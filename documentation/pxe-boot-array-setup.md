@@ -57,6 +57,9 @@ raid1.sh
 #!/bin/bash
 set -x
 
+mdadm --stop /dev/md0
+sleep 2
+
 for device in /dev/sda /dev/sdb ; do 
  dd if=/dev/zero of=${device} bs=1M count=1 ;
  # wipe last megabyte to get rid of RAID
@@ -65,17 +68,26 @@ for device in /dev/sda /dev/sdb ; do
 done
 sleep 2
 
+#remove secondary GPT header (did not work, see above)
+echo -e -n "2\\no\\ny\\nw\\ny\\n" | gdisk /dev/sda
+sleep 2
+mdadm --stop /dev/md0
+sleep 2
+echo -e -n "2\\no\\ny\\nw\\ny\\n" | gdisk /dev/sdb
+sleep 2
+mdadm --stop /dev/md0
+sleep 2
 
 #wipe GPT stuff (2 for "Found invalid MBR and corrupt GPT")
 echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sda
-sleep 1
+sleep 2
 mdadm --stop /dev/md0
-sleep 1
+sleep 2
 
 echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sdb
-sleep 1
+sleep 2
 mdadm --stop /dev/md0
-sleep 1
+sleep 2
 
 set -e
 
@@ -92,10 +104,10 @@ echo -e -n "n\\n2\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/md0
 sleep 3
 
 #remove secondary GPT header (did not work, see above)
-echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sda
-sleep 1
-echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sdb
-sleep 1
+#echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sda
+#sleep 1
+#echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sdb
+#sleep 1
 
 
 /usr/sbin/wipefs -f /dev/md0p1
