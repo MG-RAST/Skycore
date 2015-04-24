@@ -123,7 +123,7 @@ Filesystem will be created by cloud-config.
 
 Multiple machines:
 ```bash
-export MACHINES=`eval echo "{1..8} {10..11}"`
+export MACHINES=`eval echo "{1..8} {10..11}"` ; echo ${MACHINES}
 # test ssh
 for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} grep PRETTY /etc/os-release ; done
 # copy lvm_wipe.sh
