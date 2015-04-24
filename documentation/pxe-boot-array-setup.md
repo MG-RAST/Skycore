@@ -51,15 +51,19 @@ raid1.sh
 set -x
 set -e
 
+#create RAID1
 mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda /dev/sdb
 sleep 3
 
+# create swap partition
 echo -e -n "g\nn\n1\n2048\n+200G\np\nt\n14\np\nw" | fdisk /dev/md0
 sleep 3 # wait before you create the next one, issue in scripts
 
+#create data partition
 echo -e -n "n\n2\n\n\np\nw" | fdisk /dev/md0
 sleep 3
 
+#remove secondary GPT header
 echo -e -n "o\\ny\\nw\\n" | gdisk /dev/sda
 sleep 1
 echo -e -n "o\\ny\\nw\\n" | gdisk /dev/sdb
@@ -67,13 +71,13 @@ sleep 3
 
 /usr/sbin/wipefs -f /dev/md0p1
 /usr/sbin/wipefs -f /dev/md0p2
-
-#/usr/sbin/mkswap /dev/md0p1
-#/usr/sbin/mkfs.btrfs -f /dev/md0p2
 ```
 
 Filesystem will be created by cloud-config. but you can manually test you setup:
 ```bash
+#/usr/sbin/mkswap /dev/md0p1
+#/usr/sbin/mkfs.btrfs -f /dev/md0p2
+
 /usr/sbin/swapon /dev/md0p1
 /usr/bin/mkdir -p /media/ephemeral/
 /usr/bin/mount -t btrfs /dev/md0p2 /media/ephemeral/
