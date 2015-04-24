@@ -70,11 +70,11 @@ echo y | mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid
 sleep 3
 
 # create swap partition
-echo -e -n "g\nn\n1\n2048\n+200G\np\nt\n14\np\nw" | fdisk /dev/md0
+echo -e -n "o\\ny\\nn\\n1\\n\\n+200G\\n8200\\nw\\ny\\n" | gdisk /dev/md0
 sleep 3 # wait before you create the next one, issue in scripts
 
 #create data partition
-echo -e -n "n\n2\n\n\np\nw" | fdisk /dev/md0
+echo -e -n "n\\n2\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/md0
 sleep 3
 
 #remove secondary GPT header (did not work, see above)
