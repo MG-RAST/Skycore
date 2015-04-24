@@ -129,7 +129,7 @@ for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pe
 # copy lvm_wipe.sh
 for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem lvm_wipe.sh core@bio-worker${i}: ; done
 # execute lvm_wipe.sh
-for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo lvm_wipe.sh ; done
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo ./lvm_wipe.sh ; done
 #reboot
 for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo reboot ; done
 #remove keys:
@@ -139,7 +139,7 @@ for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pe
 #copy raid1.sh
 for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem raid1.sh core@bio-worker${i}: ; done
 # execute raid1.sh
-for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo raid1.sh ; done
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo ./raid1.sh ; done
 # reboot last time
 for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo reboot ; done
 ```
