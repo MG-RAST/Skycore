@@ -55,11 +55,13 @@ set -x
 #wipe GPT stuff (2 for "Found invalid MBR and corrupt GPT")
 echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sda
 sleep 1
+mdadm --stop /dev/md0
+sleep 1
 
 echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sdb
 sleep 1
-
 mdadm --stop /dev/md0
+sleep 1
 
 set -e
 
