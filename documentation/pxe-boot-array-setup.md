@@ -5,7 +5,7 @@ This are instructions to create an mdadm RAID1 (mirror) with swap and btrfs part
 
 ## Remove existing RAID
 
-wipe_raid.sh
+raid_wipe.sh
 ```bash
 #!/bin/bash
 set -x
