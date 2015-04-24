@@ -79,8 +79,15 @@ Following steps will executed by cloud-config, but you can use them to test your
 /usr/bin/mount -t btrfs /dev/md0p2 /media/ephemeral/
 ```
 
+## Example
 Example procedure (remove LVM, create RAID 1, create swap+data partitions):
+
+lvm_wipe.sh
 ```bash
+#!/bin/bash
+set -x
+set -e
+
 lvm vgremove --force vg01
 sleep 3
 
@@ -91,8 +98,14 @@ for device in /dev/sda /dev/sdb ; do
  dd if=/dev/zero of=${device} bs=512 count=2048 seek=$((`blockdev --getsz ${device}` - 2048)) ;
 done
 sleep 2
-
 # seems to require reboot here, because resource is busy. not sure where that comes from
+```
+
+raid1.sh
+```bash
+#!/bin/bash
+set -x
+set -e
 
 mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda /dev/sdb
 sleep 3
@@ -107,3 +120,26 @@ sleep 3
 /usr/sbin/wipefs -f /dev/md0p2
 ```
 Filesystem will be created by cloud-config.
+
+Multiple machines:
+```bash
+export MACHINES=`eval echo "{1..8} {10..11}"`
+# test ssh
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} grep PRETTY /etc/os-release ; done
+# copy lvm_wipe.sh
+for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem lvm_wipe.sh core@bio-worker${i}: ; done
+# execute lvm_wipe.sh
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo lvm_wipe.sh ; done
+#reboot
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo reboot ; done
+#remove keys:
+for i in ${MACHINES} ; do echo "$i: " ; ssh-keygen -f "/homes/wgerlach/.ssh/known_hosts" -R bio-worker${i} ; done
+#test again ssh
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} grep PRETTY /etc/os-release ; done
+#copy raid1.sh
+for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem raid1.sh core@bio-worker${i}: ; done
+# execute raid1.sh
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo raid1.sh ; done
+# reboot last time
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo reboot ; done
+```
