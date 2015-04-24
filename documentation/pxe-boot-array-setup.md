@@ -12,13 +12,18 @@ set -x
 
 umount /media/ephemeral/
 swapoff /dev/md0p1
-set -e
 
 mdadm --stop /dev/md0
 mdadm --remove /dev/md0
 
 mdadm --zero-superblock /dev/sda
 mdadm --zero-superblock /dev/sdb
+
+echo -e -n "o\\ny\\nw\ny\\n" | gdisk /dev/sda
+sleep 2
+echo -e -n "o\\ny\\nw\ny\\n" | gdisk /dev/sdb
+sleep 2
+
 ```
 
 
