@@ -66,9 +66,9 @@ echo -e -n "n\n2\n\n\np\nw" | fdisk /dev/md0
 sleep 3
 
 #remove secondary GPT header
-echo -e -n "o\\ny\\nw\\n" | gdisk /dev/sda
+echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sda
 sleep 1
-echo -e -n "o\\ny\\nw\\n" | gdisk /dev/sdb
+echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sdb
 sleep 3
 
 /usr/sbin/wipefs -f /dev/md0p1
