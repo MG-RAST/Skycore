@@ -78,3 +78,30 @@ Following steps will executed by cloud-config, but you can use them to test your
 /usr/bin/mkdir -p /media/ephemeral/
 /usr/bin/mount -t btrfs /dev/md0p2 /media/ephemeral/
 ```
+
+Example procedure (remove LVM, create RAID 1, create swap+data partitions):
+```bash
+lvm vgremove --force vg01
+sleep 3
+
+for device in /dev/sda /dev/sdb ; do 
+ dd if=/dev/zero of=${device} bs=1M count=1 ;
+ # wipe last megabyte to get rid of RAID
+ # 2048 is 1M/512bytes (getsz returns nuber of 512blocks)
+ dd if=/dev/zero of=${device} bs=512 count=2048 seek=$((`blockdev --getsz ${device}` - 2048)) ;
+done
+sleep 2
+
+mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda /dev/sdb
+sleep 3
+
+echo -e -n "g\nn\n1\n2048\n+200G\np\nt\n14\np\nw" | fdisk /dev/md0
+sleep 3 # wait before you create the next one, issue in scripts
+
+echo -e -n "n\n2\n\n\np\nw" | fdisk /dev/md0
+sleep 3
+
+/usr/sbin/wipefs -f /dev/md0p1
+/usr/sbin/wipefs -f /dev/md0p2
+```
+Filesystem will be created by cloud-config.
