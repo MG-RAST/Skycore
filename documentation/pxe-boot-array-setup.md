@@ -53,12 +53,15 @@ raid1.sh
 set -x
 set -e
 
+#wipe GPT stuff
+echo -e -n "x\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sda
+sleep 1
+
+echo -e -n "x\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sdb
+sleep 1
+
 #create RAID1
 echo y | mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda /dev/sdb
-sleep 3
-
-#remove secondary GPT header
-echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/md0
 sleep 3
 
 # create swap partition
@@ -69,11 +72,9 @@ sleep 3 # wait before you create the next one, issue in scripts
 echo -e -n "n\n2\n\n\np\nw" | fdisk /dev/md0
 sleep 3
 
-#remove secondary GPT header
-echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sda
-sleep 1
-echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sdb
-sleep 3
+#remove secondary GPT header (did not work, see above)
+#echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sda
+#sleep 1
 
 /usr/sbin/wipefs -f /dev/md0p1
 /usr/sbin/wipefs -f /dev/md0p2
