@@ -91,17 +91,25 @@ sleep 2
 
 set -e
 
+fdisk -l
+
 #create RAID1
 echo y | mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda /dev/sdb
-sleep 3
+sleep 10
+
+fdisk -l
 
 # create swap partition
 echo -e -n "2\\no\\ny\\nn\\n1\\n\\n+200G\\n8200\\nw\\ny\\n" | gdisk /dev/md0
 sleep 3 # wait before you create the next one, issue in scripts
 
+fdisk -l
+
 #create data partition
 echo -e -n "n\\n2\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/md0
 sleep 3
+
+fdisk -l
 
 #remove secondary GPT header (did not work, see above)
 #echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sda
@@ -112,6 +120,8 @@ sleep 3
 
 /usr/sbin/wipefs -f /dev/md0p1
 /usr/sbin/wipefs -f /dev/md0p2
+
+fdisk -l
 ```
 
 Filesystem will be created by cloud-config. but you can manually test you setup:
