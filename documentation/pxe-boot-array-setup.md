@@ -57,6 +57,15 @@ raid1.sh
 #!/bin/bash
 set -x
 
+for device in /dev/sda /dev/sdb ; do 
+ dd if=/dev/zero of=${device} bs=1M count=1 ;
+ # wipe last megabyte to get rid of RAID
+ # 2048 is 1M/512bytes (getsz returns nuber of 512blocks)
+ dd if=/dev/zero of=${device} bs=512 count=2048 seek=$((`blockdev --getsz ${device}` - 2048)) ;
+done
+sleep 2
+
+
 #wipe GPT stuff (2 for "Found invalid MBR and corrupt GPT")
 echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sda
 sleep 1
