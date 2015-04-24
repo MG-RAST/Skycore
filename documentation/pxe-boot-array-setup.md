@@ -92,8 +92,11 @@ echo -e -n "n\\n2\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/md0
 sleep 3
 
 #remove secondary GPT header (did not work, see above)
-#echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sda
-#sleep 1
+echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sda
+sleep 1
+echo -e -n "o\\ny\\nw\\ny\\n" | gdisk /dev/sdb
+sleep 1
+
 
 /usr/sbin/wipefs -f /dev/md0p1
 /usr/sbin/wipefs -f /dev/md0p2
