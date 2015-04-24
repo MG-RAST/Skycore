@@ -91,6 +91,8 @@ write_files:
       content: |
         #!/bin/bash
 
+        mdadm --stop /dev/md0
+
         ENV="/etc/environment"
 
         # Test for RW access to $1
@@ -156,6 +158,9 @@ write_files:
 
         if [ ! -e /dev/md0p1 ] ; then sleep 3; echo 'Waiting for /dev/md0p1'; fi
         if [ ! -e /dev/md0p2 ] ; then sleep 3; echo 'Waiting for /dev/md0p2'; fi
+
+        if [ ! -e /dev/md0p1 ] ; then echo "/dev/md0p1 not found, exit script" ; exit ; fi
+
 
         # wipe filesystem if mount fails or "keep_filesystem" does not exist
         WIPE_FS=0
