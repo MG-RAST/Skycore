@@ -54,7 +54,7 @@ set -x
 set -e
 
 #create RAID1
-mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda /dev/sdb
+echo y | mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda /dev/sdb
 sleep 3
 
 # create swap partition
