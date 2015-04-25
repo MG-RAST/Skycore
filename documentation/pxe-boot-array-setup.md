@@ -3,105 +3,21 @@
 This are instructions to create an mdadm RAID1 (mirror) with swap and btrfs partitions. First step is removal of any existing mdadm array or LVM ond the disks.
 
 
-## Remove existing RAID
+###Remove existing RAID
 
-raid_wipe.sh
-```bash
-#!/bin/bash
-set -x
-
-umount /media/ephemeral/
-swapoff /dev/md0p1
-
-mdadm --stop /dev/md0
-mdadm --remove /dev/md0
-
-mdadm --zero-superblock /dev/sda1 /dev/sdb1
-mdadm --zero-superblock /dev/sda /dev/sdb
-
-echo -e -n "o\\ny\\nw\ny\\n" | gdisk /dev/sda
-sleep 2
-echo -e -n "o\\ny\\nw\ny\\n" | gdisk /dev/sdb
-sleep 2
-
-```
+scripts/wipe_raid.sh
 
 
-## Remove LVM
+
+### Remove LVM
 Example procedure (remove LVM, create RAID 1, create swap+data partitions):
 
-lvm_wipe.sh
-```bash
-#!/bin/bash
-set -x
-set -e
-
-lvm vgremove --force vg01
-# lvm lvdisplay
-# sudo partprobe
-sleep 3
-
-for device in /dev/sda /dev/sdb ; do 
- dd if=/dev/zero of=${device} bs=1M count=1 ;
- # wipe last megabyte to get rid of RAID
- # 2048 is 1M/512bytes (getsz returns nuber of 512blocks)
- dd if=/dev/zero of=${device} bs=512 count=2048 seek=$((`blockdev --getsz ${device}` - 2048)) ;
-done
-sleep 2
-# seems to require reboot here, because resource is busy. not sure where that comes from
-```
+scripts/wipe_lvm.sh
 
 ## Create RAID1 with swap+data partitions
-raid1.sh
-```bash
-#!/bin/bash
-set -x
+scripts/create_raid1.sh
 
-cat /proc/mdstat
-set -e
-
-#create /dev/sda1
-echo -e -n "n\\n1\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/sda
-#create /dev/sdb1
-echo -e -n "n\\n1\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/sdb
-sleep 3
-
-# wipe /dev/sda1 /dev/sdb1 to avoid detection of previous RAID
-for device in /dev/sda1 /dev/sdb1 ; do 
- dd if=/dev/zero of=${device} bs=1M count=1 ;
- # wipe last megabyte to get rid of RAID
- # 2048 is 1M/512bytes (getsz returns nuber of 512blocks)
- dd if=/dev/zero of=${device} bs=512 count=2048 seek=$((`blockdev --getsz ${device}` - 2048)) ;
-done
-
-sleep 3
-
-#create RAID1
-mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda1 /dev/sdb1
-sleep 5
-
-
-# create swap partition
-#echo -e -n "2\\no\\ny\\nn\\n1\\n\\n+200G\\n8200\\nw\\ny\\n" | gdisk /dev/md0
-echo -e -n "n\\n1\\n\\n+200G\\n8200\\nw\\ny\\n" | gdisk /dev/md0
-
-sleep 3 # wait before you create the next one, issue in scripts
-
-fdisk -l
-
-#create data partition
-echo -e -n "n\\n2\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/md0
-sleep 3
-
-fdisk -l
-
-/usr/sbin/wipefs -f /dev/md0p1
-/usr/sbin/wipefs -f /dev/md0p2
-
-fdisk -l
-```
-
-Filesystem will be created by cloud-config. but you can manually test you setup:
+Filesystem will be created by cloud-config. But you can manually test you setup:
 ```bash
 #/usr/sbin/mkswap /dev/md0p1
 #/usr/sbin/mkfs.btrfs -f /dev/md0p2
@@ -118,9 +34,9 @@ export MACHINES=`eval echo "{1..8} {10..11}"` ; echo ${MACHINES}
 # test ssh
 for i in ${MACHINES} ; do echo "$i: " ; ssh -o ConnectTimeout=1 -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} grep PRETTY /etc/os-release ; done
 # copy lvm_wipe.sh
-for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem lvm_wipe.sh core@bio-worker${i}: ; done
+for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem wipe_lvm.sh core@bio-worker${i}: ; done
 # execute lvm_wipe.sh
-for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo ./lvm_wipe.sh ; done
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo ./wipe_lvm.sh ; done
 #reboot
 for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo reboot ; done
 #remove keys:
@@ -128,9 +44,9 @@ for i in ${MACHINES} ; do echo "$i: " ; ssh-keygen -f "/homes/wgerlach/.ssh/know
 #test again ssh
 for i in ${MACHINES} ; do echo "$i: " ; ssh -o ConnectTimeout=1 -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} grep PRETTY /etc/os-release ; done
 #copy raid1.sh
-for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem raid1.sh core@bio-worker${i}: ; done
+for i in ${MACHINES} ; do echo "$i: " ; scp -i ~/.ssh/wo_magellan_private_key.pem create_raid1.sh core@bio-worker${i}: ; done
 # execute raid1.sh
-for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo ./raid1.sh ; done
+for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo ./create_raid1.sh ; done
 # reboot last time
 for i in ${MACHINES} ; do echo "$i: " ; ssh -i ~/.ssh/wo_magellan_private_key.pem core@bio-worker${i} sudo reboot ; done
 ```
