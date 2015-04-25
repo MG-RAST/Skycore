@@ -57,8 +57,10 @@ raid1.sh
 #!/bin/bash
 set -x
 
-mdadm --stop /dev/md0
-sleep 2
+cat /proc/mdstat
+
+#mdadm --stop /dev/md0
+#sleep 2
 
 for device in /dev/sda /dev/sdb ; do 
  dd if=/dev/zero of=${device} bs=1M count=1 ;
@@ -69,25 +71,25 @@ done
 sleep 2
 
 #remove secondary GPT header (did not work, see above)
-echo -e -n "2\\no\\ny\\nw\\ny\\n" | gdisk /dev/sda
-sleep 2
-mdadm --stop /dev/md0
-sleep 2
-echo -e -n "2\\no\\ny\\nw\\ny\\n" | gdisk /dev/sdb
-sleep 2
-mdadm --stop /dev/md0
-sleep 2
+#echo -e -n "2\\no\\ny\\nw\\ny\\n" | gdisk /dev/sda
+#sleep 2
+#mdadm --stop /dev/md0
+#sleep 2
+#echo -e -n "2\\no\\ny\\nw\\ny\\n" | gdisk /dev/sdb
+#sleep 2
+#mdadm --stop /dev/md0
+#sleep 2
 
 #wipe GPT stuff (2 for "Found invalid MBR and corrupt GPT")
-echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sda
-sleep 2
-mdadm --stop /dev/md0
-sleep 2
+#echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sda
+#sleep 2
+#mdadm --stop /dev/md0
+#sleep 2
 
-echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sdb
-sleep 2
-mdadm --stop /dev/md0
-sleep 2
+#echo -e -n "2\\nx\\nz\\nz\\ny\\ny\\n" | gdisk /dev/sdb
+#sleep 2
+#mdadm --stop /dev/md0
+#sleep 2
 
 set -e
 
@@ -100,7 +102,9 @@ sleep 10
 fdisk -l
 
 # create swap partition
-echo -e -n "2\\no\\ny\\nn\\n1\\n\\n+200G\\n8200\\nw\\ny\\n" | gdisk /dev/md0
+#echo -e -n "2\\no\\ny\\nn\\n1\\n\\n+200G\\n8200\\nw\\ny\\n" | gdisk /dev/md0
+echo -e -n "n\\n1\\n\\n+200G\\n8200\\nw\\ny\\n" | gdisk /dev/md0
+
 sleep 3 # wait before you create the next one, issue in scripts
 
 fdisk -l
