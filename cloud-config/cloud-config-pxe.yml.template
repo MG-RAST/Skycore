@@ -32,6 +32,7 @@ write_files:
             fleet:
                 public-ip: $_public_ipv4
                 # etcd-request-timeout: 15
+                metadata: $METADATA
             units:
                 - name: settimezone.service
                   command: start
@@ -143,15 +144,17 @@ write_files:
 
         ETCD_NAME=node_$(get_mac %network_interface%)
         echo ETCD_NAME=${ETCD_NAME} >> $ENV
-        sed 's/\$ETCD_NAME/'${ETCD_NAME}'/g' /run/cloud-config.yml > /tmp/cconfigtmp
-        mv /tmp/cconfigtmp /run/cloud-config.yml
+        #sed 's/\$ETCD_NAME/'${ETCD_NAME}'/g' /run/cloud-config.yml > /tmp/cconfigtmp
+        #mv /tmp/cconfigtmp /run/cloud-config.yml
+        sed -i 's/\$ETCD_NAME/'${ETCD_NAME}'/g' /run/cloud-config.yml
 
         #fleet metadata:
         RAM_GB=`awk '/MemTotal/ {printf( "%.0f\n", $2 / (1024*1024) )}' /proc/meminfo`
         CORES=`nproc --all`
         mkdir -p /etc/fleet/
         echo metatadata=\"RAM_GB=${RAM_GB},CORES=${CORES}\" >> /etc/fleet/fleet.conf
-
+        export METADATA="RAM_GB=${RAM_GB},CORES=${CORES}"
+        sed -i 's/\$METADATA/'${METADATA}'/g' /run/cloud-config.yml
         
 
         # wait for array partitions
