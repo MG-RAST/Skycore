@@ -64,6 +64,15 @@ set -e
 echo -e -n "n\\n1\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/sda
 #create /dev/sdb1
 echo -e -n "n\\n1\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/sdb
+sleep 3
+
+# wipe /dev/sda1 /dev/sdb1 to avoid detection of previous RAID
+for device in /dev/sda1 /dev/sdb1 ; do 
+ dd if=/dev/zero of=${device} bs=1M count=1 ;
+ # wipe last megabyte to get rid of RAID
+ # 2048 is 1M/512bytes (getsz returns nuber of 512blocks)
+ dd if=/dev/zero of=${device} bs=512 count=2048 seek=$((`blockdev --getsz ${device}` - 2048)) ;
+done
 
 sleep 3
 
