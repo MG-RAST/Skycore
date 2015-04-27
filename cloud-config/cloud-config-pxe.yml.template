@@ -83,6 +83,14 @@ write_files:
                         [Service]
                         Environment='TMPDIR=/media/ephemeral/tmp/'
                         Environment='DOCKER_OPTS="-g=/media/ephemeral/docker"'
+                - name: systemd-networkd.service
+                  drop-ins:
+                    - name: network-use-hostname.conf
+                      content: |
+                        [Match]
+                        Name=%network_interface%
+                        [DHCP]
+                        UseHostname=true
                 - name: etcd.service
                   command: start
                 - name: fleet.service
