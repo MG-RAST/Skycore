@@ -83,14 +83,6 @@ write_files:
                         [Service]
                         Environment='TMPDIR=/media/ephemeral/tmp/'
                         Environment='DOCKER_OPTS="-g=/media/ephemeral/docker"'
-                #- name: systemd-networkd.service
-                #  drop-ins:
-                #    - name: network-use-hostname.conf
-                #      content: |
-                #        [Match]
-                #        Name=%network_interface%
-                #        [DHCP]
-                #        UseHostname=true
                 - name: etcd.service
                   command: start
                 - name: fleet.service
@@ -159,9 +151,9 @@ write_files:
         #fleet metadata:
         RAM_GB=`awk '/MemTotal/ {printf( "%.0f\n", $2 / (1024*1024) )}' /proc/meminfo`
         CORES=`nproc --all`
-        mkdir -p /etc/fleet/
-        echo metatadata=\"RAM_GB=${RAM_GB},CORES=${CORES}\" >> /etc/fleet/fleet.conf
-        export METADATA="RAM_GB=${RAM_GB},CORES=${CORES}"
+        mkdir -p /etc/fleet/        
+        export METADATA="HOSTNAME=${HOSTNAME},ETCD_NAME=${ETCD_NAME},RAM_GB=${RAM_GB},CORES=${CORES}"
+        echo metatadata=\"METADATA=${METADATA}\" >> /etc/fleet/fleet.conf
         sed -i 's/\$METADATA/'${METADATA}'/g' /run/cloud-config.yml
         
 
