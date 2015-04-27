@@ -87,6 +87,16 @@ write_files:
                   command: start
                 - name: fleet.service
                   command: start
+                - name: skycore.service
+                  command: start
+                  content: |
+                   [Unit]
+                   Description=skycore binary
+
+                   [Service]
+                   Type=oneshot
+                   PreExecStart=-/usr/bin/rm -f /home/core/skycore
+                   ExecStart=/usr/bin/wget --tries=30 --wait=3 --random-wait --retry-connrefused https://github.com/wgerlach/Skycore/releases/download/latest/skycore --output-file=/home/core/skycore
     - path: /run/setup-environment.sh
       permissions: '0755'
       content: |
