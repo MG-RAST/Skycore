@@ -2,7 +2,7 @@
 FROM nginx
 # offical nginx release
 
-RUN apt-get update && apt-get -y install git curl
+RUN apt-get update && apt-get -y install git curl net-tools
 RUN cd /root && git clone https://github.com/wgerlach/Skycore.git
 RUN rm -f /etc/nginx/nginx.conf /etc/nginx/sites-enabled/* /etc/nginx/sites-available/default ; \
 	ln -s /root/Skycore/services/nginx/nginx.conf /etc/nginx/nginx.conf 
