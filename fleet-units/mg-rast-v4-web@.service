@@ -14,7 +14,7 @@ ExecStartPre=-/usr/bin/docker kill mg-rast-v4-web
 ExecStartPre=-/usr/bin/docker rm mg-rast-v4-web
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:mg-rast-v4-web
 
-ExecStart=/usr/bin/docker run --rm --name mg-rast-v4-web -p ${COREOS_PRIVATE_IPV4}:80:8005 mgrast/v4-web:latest /usr/sbin/apache2ctl -D FOREGROUND
+ExecStart=/usr/bin/docker run --rm --name mg-rast-v4-web -p ${COREOS_PRIVATE_IPV4}:8005:80 mgrast/v4-web:latest /usr/sbin/apache2ctl -D FOREGROUND
 ExecStartPost=/usr/bin/sleep 5
 ExecStartPost=/usr/bin/docker exec mg-rast-v4-web bash -c "echo %i > /var/www/html/instance.txt"
 ExecStop=/usr/bin/docker stop mg-rast-v4-web
