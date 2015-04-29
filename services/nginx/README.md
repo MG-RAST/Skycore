@@ -4,8 +4,8 @@ Build image:
 ```bash
 git clone https://github.com/wgerlach/Skycore.git
 cd Skycore/services/nginx/docker
-docker rm -f mynginx ; docker rmi mynginx
-docker build  --no-cache -t mynginx .
+docker rm -f mgrast_nginx ; docker rmi mgrast/nginx
+docker build  --no-cache -t mgrast/nginx .
 ```
 
 Start nginx via confd (8003 is just an example)
