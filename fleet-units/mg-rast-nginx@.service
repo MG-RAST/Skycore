@@ -1,7 +1,7 @@
 [Unit]
 Description=MG-RAST Nginx
-After=docker.service
-Requires=docker.service
+#After=docker.service
+#Requires=docker.service
 
 [Service]
 # service name:   mg-rast-nginx
