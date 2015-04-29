@@ -15,7 +15,7 @@ RUN mkdir -p /gopath/src/github.com/MG-RAST ; \
 
 RUN mkdir -p /gopath/src/github.com/wgerlach ; \
 	cd /gopath/src/github.com/wgerlach && \
-	git clone -b develop https://github.com/wgerlach/Skycore.git
+	git clone -b master https://github.com/wgerlach/Skycore.git
 
 ENV GOPATH /gopath/
 
