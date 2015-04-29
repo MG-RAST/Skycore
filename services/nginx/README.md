@@ -10,11 +10,11 @@ docker build  --no-cache -t mgrast/nginx .
 
 Start nginx via confd (8003 is just an example)
 ```bash
-docker run -d -p 8003:80 --name mynginx mynginx
+docker run -d -p 8003:80 --name mgrast_nginx mgrast/nginx
 or
-docker run -d -p 8003:80 --name mynginx mynginx <cmd>
+docker run -d -p 8003:80 --name mgrast_nginx mgrast/nginx <cmd>
 ```
 or if you want to pull from git first:
 ```bash
-docker run -d -p 8003:80 --name mynginx mynginx bash -c "cd /root/Skycore && git pull && /root/Skycore/services/nginx/confd/run_confd.sh"
+docker run -d -p 8003:80 --name mgrast_nginx mgrast/nginx bash -c "cd /Skycore && git pull && /Skycore/services/nginx/confd/run_confd.sh"
 ```
