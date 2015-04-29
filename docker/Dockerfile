@@ -39,5 +39,5 @@ RUN echo '#!/bin/bash' > /compile.sh ; \
 # container will need access to docker socket
 # mkdir -p ~/skycore_bin
 # docker run -t -i -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker --name sky_fac -v ~/skycore_bin:/gopath/bin skycore/factory:latest bash
-
+# wget https://get.docker.com/builds/Linux/i386/docker-1.5.0 && mv docker-1.5.0 /usr/bin/docker && chmod +x /usr/bin/docker
 
