@@ -8,7 +8,7 @@ upstream mg-rast-v4-web_pool {
 	{{$data := json .Value}}
 	#id: {{$data.host}}
 	#ip: {{$data.COREOS_PRIVATE_IPV4}}
-	server {{$data.COREOS_PRIVATE_IPV4}}:80;
+	server {{$data.COREOS_PRIVATE_IPV4}}:8005;
 {{end}}
 }
 
