@@ -42,9 +42,9 @@ RUN echo '#!/bin/bash' > /compile.sh ; \
 # docker run -t -i --name sky_fac -v ~/skycore_bin:/gopath/bin skycore/factory:latest bash -c "cd /gopath/src/github.com/wgerlach/Skycore && git pull && /compile.sh"
 # docker start sky_fac
 
-### skycore execution
+### skycore execution within container
 # container will need access to docker socket
 # mkdir -p ~/skycore_bin
-# docker run -t -i -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker --name sky_fac -v ~/skycore_bin:/gopath/bin skycore/factory:latest bash
-# wget https://get.docker.com/builds/Linux/i386/docker-1.5.0 && mv docker-1.5.0 /usr/bin/docker && chmod +x /usr/bin/docker
+# docker run -t -i -v /var/run/docker.sock:/var/run/docker.sock --name sky_fac -v ~/skycore_bin:/gopath/bin skycore/factory:latest bash
+
 
