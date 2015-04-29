@@ -8,7 +8,6 @@ Requires=docker.service
 # image name:     mgrast/nginx
 # container name: mg-rast-nginx
 
-TimeoutStartSec=0
 EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill mg-rast-nginx
 ExecStartPre=-/usr/bin/docker rm mg-rast-nginx
