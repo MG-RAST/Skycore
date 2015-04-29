@@ -1,5 +1,6 @@
 
-FROM nginx # offical nginx release
+FROM nginx 
+# baseimage is offical nginx release
 
 RUN apt-get update && apt-get -y install git curl net-tools
 RUN cd / && git clone https://github.com/wgerlach/Skycore.git
