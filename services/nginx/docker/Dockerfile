@@ -13,7 +13,7 @@ RUN rm -f /etc/nginx/nginx.conf /etc/nginx/sites-enabled/* /etc/nginx/sites-avai
 #confd
 RUN curl -L -o /usr/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.8.0/confd-0.8.0-linux-amd64 && chmod +x /usr/bin/confd
 
-RUN /usr/bin/mkdir -p /etc/confd/conf.d/ /etc/confd/templates/ ; \
+RUN mkdir -p /etc/confd/conf.d/ /etc/confd/templates/ ; \
 	ln -s /Skycore/services/nginx/confd/nginx.toml /etc/confd/conf.d/nginx.toml ; \
 	ln -s /Skycore/services/nginx/confd/nginx.tmpl /etc/confd/templates/nginx.tmpl
 
