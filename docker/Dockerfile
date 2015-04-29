@@ -37,6 +37,7 @@ RUN echo '#!/bin/bash' > /compile.sh ; \
 
 ### skycore execution
 # container will need access to docker socket
-# docker run -t -i -v /var/run/docker.sock:/var/run/docker.sock ...
+# mkdir -p ~/skycore_bin
+# docker run -t -i -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker --name sky_fac -v ~/skycore_bin:/gopath/bin skycore/factory:latest bash
 
 
