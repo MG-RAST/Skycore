@@ -11,7 +11,7 @@ RUN apt-get update ; apt-get install -y \
 #AWE source
 RUN mkdir -p /gopath/src/github.com/MG-RAST ; \
 	cd /gopath/src/github.com/MG-RAST && \
-	git clone -b develop https://github.com/wgerlach/AWE.git
+	git clone -b master https://github.com/wgerlach/AWE.git
 
 RUN mkdir -p /gopath/src/github.com/wgerlach ; \
 	cd /gopath/src/github.com/wgerlach && \
