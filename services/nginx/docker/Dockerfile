@@ -4,7 +4,10 @@ FROM nginx
 
 RUN apt-get update && apt-get -y install git curl net-tools
 RUN cd / && git clone https://github.com/wgerlach/Skycore.git
-RUN rm -f /etc/nginx/nginx.conf /etc/nginx/sites-enabled/* /etc/nginx/sites-available/default ; \
+RUN rm -f /etc/nginx/nginx.conf \
+		/etc/nginx/conf.d/default.conf \
+		/etc/nginx/sites-enabled/* \
+		/etc/nginx/sites-available/default ; \
 	ln -s /Skycore/services/nginx/nginx.conf /etc/nginx/nginx.conf ; \
 	mkdir -p /etc/nginx/sites-enabled/
 	#ln -s /Skycore/services/nginx/default_server /etc/nginx/default_server
