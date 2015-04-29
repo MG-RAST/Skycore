@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+
 set -x
 
 
@@ -16,6 +16,7 @@ confd -onetime -node ${ETCD_ENDPOINT} -config-file /etc/confd/conf.d/nginx.toml
 
 # start nginx
 service nginx start &
+set -e
 
 confd -watch -node ${ETCD_ENDPOINT} -config-file /etc/confd/conf.d/nginx.toml 
 

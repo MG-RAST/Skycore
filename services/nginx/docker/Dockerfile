@@ -9,9 +9,8 @@ RUN rm -f /etc/nginx/nginx.conf \
 		/etc/nginx/sites-enabled/* \
 		/etc/nginx/sites-available/default ; \
 	ln -s /Skycore/services/nginx/nginx.conf /etc/nginx/nginx.conf ; \
-	#ln -s /Skycore/services/nginx/html/index.html /etc/nginx/sites-enabled/index.html ; \
-	mkdir -p /etc/nginx/sites-enabled/
-	#ln -s /Skycore/services/nginx/default_server /etc/nginx/default_server
+	mkdir -p /etc/nginx/sites-enabled/ ; \
+	ln -s /Skycore/services/nginx/default_server /etc/nginx/sites-enabled/default_server
 
 
 #confd
