@@ -7,15 +7,16 @@ Requires=docker.service
 # service name:   mg-rast-nginx
 # image name:     mgrast/nginx
 # container name: mg-rast-nginx
-
+ExecStartPre=-/usr/bin/echo hello1
 EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill mg-rast-nginx
 ExecStartPre=-/usr/bin/docker rm mg-rast-nginx
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:mg-rast-nginx
+ExecStartPre=-/usr/bin/echo hello2
 
 #ExecStart=/usr/bin/docker run --rm --name mg-rast-nginx -p ${COREOS_PUBLIC_IPV4}:80:80 mgrast/nginx:latest bash -c "cd /Skycore && git pull && /Skycore/services/nginx/confd/run_confd.sh"
 ExecStart=/usr/bin/docker run --rm --name mg-rast-nginx -p ${COREOS_PUBLIC_IPV4}:80:80 mgrast/nginx:latest /Skycore/services/nginx/confd/run_confd.sh
-
+ExecStartPre=-/usr/bin/echo hello3
 
 ExecStop=/usr/bin/docker stop mg-rast-nginx
 
