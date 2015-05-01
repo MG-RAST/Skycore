@@ -1,25 +1,24 @@
 [Unit]
 Description=MG-RAST Nginx
-#After=docker.service
-#Requires=docker.service
+After=docker.service
+Requires=docker.service
 
 [Service]
-# service name:   mg-rast-nginx
-# image name:     mgrast/nginx
-# container name: mg-rast-nginx
-ExecStartPre=-/usr/bin/echo hello1
+Environment='CONTAINER=mg-rast-nginx'
+Environment='IMAGE=mgrast/nginx'
+Environment='SERVICE=mg-rast-nginx'
+
 EnvironmentFile=-/etc/environment
-ExecStartPre=-/usr/bin/docker kill mg-rast-nginx
-ExecStartPre=-/usr/bin/docker rm mg-rast-nginx
-ExecStartPre=/home/core/skycore pull --tag=latest etcd:mg-rast-nginx
-ExecStartPre=-/usr/bin/echo hello2
+ExecStartPre=-/usr/bin/docker kill ${CONTAINER}
+ExecStartPre=-/usr/bin/docker rm ${CONTAINER}
+ExecStartPre=/home/core/skycore pull --tag=latest etcd:${SERVICE}
 
-# %i =instance name, used to make sure only 
-ExecStart=/usr/bin/docker run --rm --name mg-rast-nginx -p ${COREOS_PUBLIC_IPV4}:80:80 mgrast/nginx:latest bash -c "cd /Skycore && git pull && /Skycore/services/nginx/confd/run_confd.sh %i"
-#ExecStart=/usr/bin/docker run --rm --name mg-rast-nginx -p ${COREOS_PUBLIC_IPV4}:80:80 mgrast/nginx:latest /Skycore/services/nginx/confd/run_confd.sh %i
-ExecStartPre=-/usr/bin/echo hello3
+ 
+ExecStart=/usr/bin/docker run --rm --name ${CONTAINER} -p ${COREOS_PUBLIC_IPV4}:80:80 ${IMAGE}:latest bash -c "cd /Skycore && git pull && /Skycore/services/nginx/confd/run_confd.sh"
+#ExecStart=/usr/bin/docker run --rm --name ${CONTAINER} -p ${COREOS_PUBLIC_IPV4}:80:80 ${IMAGE}:latest /Skycore/services/nginx/confd/run_confd.sh
 
-ExecStop=/usr/bin/docker stop mg-rast-nginx
+
+ExecStop=/usr/bin/docker stop ${CONTAINER}
 
 #[X-Fleet]
 #Conflicts=mg-rast-nginx@*.service
