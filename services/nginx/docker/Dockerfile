@@ -7,7 +7,7 @@ RUN apt-get update && apt-get -y install git curl net-tools
 # config files and run_confd.sh
 RUN cd / && \
   git clone https://github.com/wgerlach/Skycore.git && \
-  mkdir -p /Skycore/services/nginx/sites-enabled
+  mkdir -p /etc/nginx/sites-enabled/
 
 
 # install confd
