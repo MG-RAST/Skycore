@@ -11,7 +11,7 @@ RUN cd / && \
 
 
 # install confd
-RUN curl -L -o /usr/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.8.0/confd-0.8.0-linux-amd64 && \
+RUN curl -L -o /usr/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.9.0/confd-0.9.0-linux-amd64 && \
   chmod +x /usr/bin/confd
 
 # start confd and nginx
