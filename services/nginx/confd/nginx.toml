@@ -3,20 +3,20 @@
 
 # The name of the template that will be used to render the application's configuration file
 # Confd will look in `/etc/conf.d/templates` for these files by default
-src = "nginx.tmpl"
+Src = "nginx.tmpl"
 
 # The location to place the rendered configuration file
-dest = "/etc/nginx/sites-enabled/mg-rast-v4-web_pool.conf"
+Dest = "/etc/nginx/sites-enabled/mg-rast-v4-web_pool.conf"
 
 # The etcd keys or directory to watch.  This is where the information to fill in
 # the template will come from.
-keys = [ "/services/mg-rast-v4-web" ]
+Keys = [ "/services/mg-rast-v4-web" ]
 
 # File ownership and mode information
-owner = "root"
-mode = "0644"
+Owner = "root"
+Mode = "0644"
 
 # These are the commands that will be used to check whether the rendered config is
 # valid and to reload the actual service once the new config is in place
-check_cmd = "/usr/sbin/nginx -t"
-reload_cmd = "/usr/sbin/service nginx reload"
+Check_cmd = "/usr/sbin/nginx -t"
+Reload_cmd = "/usr/sbin/service nginx reload"
