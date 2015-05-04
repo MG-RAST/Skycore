@@ -19,4 +19,5 @@ Mode = "0644"
 # These are the commands that will be used to check whether the rendered config is
 # valid and to reload the actual service once the new config is in place
 Check_cmd = "/usr/sbin/nginx -t"
-Reload_cmd = "/usr/sbin/service nginx reload"
+#Reload_cmd = "/usr/sbin/service nginx reload"
+Reload_cmd = "docker exec -t -i mgrast_nginx /usr/sbin/service nginx reload"
