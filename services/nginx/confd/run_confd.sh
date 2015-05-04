@@ -23,8 +23,8 @@ sleep 1
 
 set -e
 
-confd -watch=false ${CONFD_ARGS} &
+confd -watch=false ${CONFD_ARGS}
 
-sleep 1
 
-nginx -c /Skycore/services/nginx/nginx.conf
+# rund in another container now
+#nginx -c /Skycore/services/nginx/nginx.conf
