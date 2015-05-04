@@ -4,7 +4,7 @@
 set -x
 
 if [ ! -e /usr/bin/docker ] ; then
-  curl https://get.docker.com/builds/Linux/x86_64/docker-1.6.0 && mv docker-1.6.0 /usr/bin/docker && chmod +x /usr/bin/docker
+  curl -O https://get.docker.com/builds/Linux/x86_64/docker-1.6.0 && mv docker-1.6.0 /usr/bin/docker && chmod +x /usr/bin/docker
 fi
 
 export ETCD_ENDPOINT=$(route|grep default|awk '{print $2}'):4001
