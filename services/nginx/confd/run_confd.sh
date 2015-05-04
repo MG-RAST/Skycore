@@ -17,6 +17,6 @@ confd -onetime ${CONFD_ARGS}
 
 set -e
 
-confd -watch ${CONFD_ARGS} &
+confd -watch=false ${CONFD_ARGS} &
 
 nginx -c /Skycore/services/nginx/nginx.conf
