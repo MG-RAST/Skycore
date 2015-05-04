@@ -3,6 +3,11 @@
 
 set -x
 
+if [ ! -e /usr/bin/docker] ; then
+  docker run -t -i -v /var/run/docker.sock:/var/run/docker.sock --name mgrast_confd mgrast/nginx bash
+  curl https://get.docker.com/builds/Linux/x86_64/docker-1.6.0 > /usr/bin/docker && chmod +x /usr/bin/docker
+fi
+
 export ETCD_ENDPOINT=$(route|grep default|awk '{print $2}'):4001
 # usually => export ETCD_ENDPOINT=172.17.42.1:4001
 export CONF_DIR="/Skycore/services/nginx/confd"
