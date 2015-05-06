@@ -6,7 +6,7 @@ Requires=docker.service
 [Service]
 Environment='CONTAINER=mgrast_nginx'
 Environment='IMAGE=mgrast/nginxconfd'
-Environment='SERVICE=mg-rast-nginx'
+Environment='SERVICE=mg-rast-nginxconfd'
 
 EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill ${CONTAINER}
