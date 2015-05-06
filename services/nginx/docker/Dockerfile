@@ -1,3 +1,4 @@
+# image to run nginx and confd containers (one container for each)
 
 FROM nginx 
 # baseimage is offical nginx release
@@ -9,14 +10,14 @@ RUN cd / && \
   git clone https://github.com/wgerlach/Skycore.git && \
   mkdir -p /etc/nginx/sites-enabled/
 
+# required by confd to reload nginx in separate nginx container
+ADD https://get.docker.com/builds/Linux/x86_64/docker-1.6.0 /usr/bin/docker
 
 # install confd
 RUN curl -L -o /usr/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.9.0/confd-0.9.0-linux-amd64 && \
-  chmod +x /usr/bin/confd
+  chmod +x /usr/bin/confd && chmod +x /usr/bin/docker
 
-# start confd and nginx
-CMD ["/root/Skycore/services/nginx/confd/run_confd.sh"]
 
-# Expose ports.
+# Expose nginx ports.
 EXPOSE 80
 EXPOSE 443
