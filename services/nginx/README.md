@@ -1,4 +1,5 @@
 
+The image contains both cnginx and confd, but they will be executes in separate containers.
 
 Build image:
 ```bash
@@ -19,9 +20,9 @@ docker run -d -p 80:80 -v /etc/nginx/sites-enabled/ --name mgrast_nginx mgrast/n
 
 ### Start confd
 ```bash
-docker run -t -i --volumes-from mgrast_nginx -v /var/run/docker.sock:/var/run/docker.sock --name mgrast_confd mgrast/nginx /Skycore/services/nginx/confd/run_confd.sh
+docker run -t -i --volumes-from mgrast_nginx -v /var/run/docker.sock:/var/run/docker.sock --name mgrast_confd mgrast/nginxconfd /Skycore/services/nginx/confd/run_confd.sh
 ```
 Or alternatively with latest git code:
 ```bash
-docker run -t -i --volumes-from mgrast_nginx -v /var/run/docker.sock:/var/run/docker.sock --name mgrast_confd mgrast/nginx bash -c 'cd Skycore && git pull && /Skycore/services/nginx/confd/run_confd.sh'
+docker run -t -i --volumes-from mgrast_nginx -v /var/run/docker.sock:/var/run/docker.sock --name mgrast_confd mgrast/nginxconfd bash -c 'cd Skycore && git pull && /Skycore/services/nginx/confd/run_confd.sh'
 ```
