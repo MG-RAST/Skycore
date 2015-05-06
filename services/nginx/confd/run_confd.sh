@@ -22,7 +22,7 @@ sleep 1
 
 set -e
 
-confd -watch=false ${CONFD_ARGS}
+confd -watch=false -interval=5 ${CONFD_ARGS}
 
 
 # rund in another container now
