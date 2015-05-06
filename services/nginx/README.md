@@ -4,17 +4,24 @@ Build image:
 ```bash
 git clone https://github.com/wgerlach/Skycore.git
 cd Skycore/services/nginx/docker
-docker rm -f mgrast_nginx ; docker rmi mgrast/nginx
-docker build  --no-cache -t mgrast/nginx .
+docker rm -f mgrast_nginx mgrast_confd ; docker rmi mgrast/nginxconfd
+docker build  --no-cache -t mgrast/nginxconfd:`date +"%Y%m%d.%H%M"` .
 ```
 
-Start nginx via confd
+### Start nginx
 ```bash
-docker run -d -p 80:80 --name mgrast_nginx mgrast/nginx
-or
-docker run -d -p 80:80 --name mgrast_nginx mgrast/nginx <cmd>
+docker run -d -p 80:80 -v /etc/nginx/sites-enabled/ --name mgrast_nginx mgrast/nginxconfd /usr/sbin/nginx -c /Skycore/services/nginx/nginx.conf
 ```
-or if you want to pull from git first:
+Or alternatively with latest git code:
 ```bash
-docker run -d -p 80:80 --name mgrast_nginx mgrast/nginx bash -c "cd /Skycore && git pull && /Skycore/services/nginx/confd/run_confd.sh"
+docker run -d -p 80:80 -v /etc/nginx/sites-enabled/ --name mgrast_nginx mgrast/nginxconfd bash -c 'cd Skycore && git pull && /usr/sbin/nginx -c /Skycore/services/nginx/nginx.conf'
+```
+
+### Start confd
+```bash
+docker run -t -i --volumes-from mgrast_nginx -v /var/run/docker.sock:/var/run/docker.sock --name mgrast_confd mgrast/nginx /Skycore/services/nginx/confd/run_confd.sh
+```
+Or alternatively with latest git code:
+```bash
+docker run -t -i --volumes-from mgrast_nginx -v /var/run/docker.sock:/var/run/docker.sock --name mgrast_confd mgrast/nginx bash -c 'cd Skycore && git pull && /Skycore/services/nginx/confd/run_confd.sh'
 ```
