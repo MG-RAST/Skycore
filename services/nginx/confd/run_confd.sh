@@ -22,7 +22,8 @@ sleep 1
 
 set -e
 
-confd -watch=false -interval=5 ${CONFD_ARGS}
+#for interval polling:  -watch=false -interval=5
+confd -watch ${CONFD_ARGS}
 
 
 # rund in another container now
