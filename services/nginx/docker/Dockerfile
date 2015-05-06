@@ -10,12 +10,10 @@ RUN cd / && \
   git clone https://github.com/wgerlach/Skycore.git && \
   mkdir -p /etc/nginx/sites-enabled/
 
-# required by confd to reload nginx in separate nginx container
+# install confd (docker required to reload nginx in separate nginx container)
+ADD https://github.com/kelseyhightower/confd/releases/download/v0.9.0/confd-0.9.0-linux-amd64 /usr/bin/confd
 ADD https://get.docker.com/builds/Linux/x86_64/docker-1.5.0 /usr/bin/docker
-
-# install confd
-RUN curl -L -o /usr/bin/confd https://github.com/kelseyhightower/confd/releases/download/v0.9.0/confd-0.9.0-linux-amd64 && \
-  chmod +x /usr/bin/confd && chmod +x /usr/bin/docker
+RUN chmod +x /usr/bin/confd /usr/bin/docker
 
 
 # Expose nginx ports.
