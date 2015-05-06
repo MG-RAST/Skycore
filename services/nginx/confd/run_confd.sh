@@ -12,7 +12,7 @@ if [ ! -e /usr/bin/docker ] ; then
 fi
 
 # test to make sure client and server version of docker are the same
-docker version
+/usr/bin/docker version
 
 set +e
 
