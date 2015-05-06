@@ -4,8 +4,8 @@ set -x
 set -e
 
 
-# nginx
-curl -L http://127.0.0.1:4001/v2/keys/service_images/mg-rast-nginx/shock -XPUT -d value="shock.metagenomics.anl.gov/node/cd138734-b19e-426f-bdb5-9d58187bec83"
+# nginxconfd (for nginx and confd container)
+curl -L http://127.0.0.1:4001/v2/keys/service_images/mg-rast-nginx/shock -XPUT -d value="shock.metagenomics.anl.gov/node/acdd0450-22e2-4ead-8956-dee1cbfbc8b9"
 
 # solr-m5nr
 curl -L http://127.0.0.1:4001/v2/keys/service_images/solr-m5nr/shock -XPUT -d value="shock.metagenomics.anl.gov/node/174bbd39-c80c-4473-964b-2b97a226d10c"
