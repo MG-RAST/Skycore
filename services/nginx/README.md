@@ -26,3 +26,6 @@ Or alternatively with latest git code:
 ```bash
 docker run -t -i --volumes-from mgrast_nginx -v /var/run/docker.sock:/var/run/docker.sock --name mgrast_confd mgrast/nginxconfd bash -c 'cd Skycore && git pull && /Skycore/services/nginx/confd/run_confd.sh'
 ```
+
+### Issues
+confd uses here docker to invoke a reload of nginx in the nginx container. This requires that the docker client is the same version as the host docker server.
