@@ -2,18 +2,10 @@
 
 
 set -x
+
 set -e
-
-export DOCKER_VERSION="1.5.0"
-if [ ! -e /usr/bin/docker ] ; then
-  curl -O https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}
-  mv docker-${DOCKER_VERSION} /usr/bin/docker 
-  chmod +x /usr/bin/docker
-fi
-
 # test to make sure client and server version of docker are the same
 /usr/bin/docker version
-
 set +e
 
 export ETCD_ENDPOINT=$(route|grep default|awk '{print $2}'):4001
