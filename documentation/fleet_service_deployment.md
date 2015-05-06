@@ -40,8 +40,9 @@ fleetctl list-units
 
 Debugging:
 ```bash
-systemctl status -l service
-journalctl -b -u service
+systemctl status -l <service>
+journalctl -b -u <service>  # only locally
+fleetctl journal <service>  # creates a ssh tunnel to remote machine
 ```
 
 ## Starting services
