@@ -10,7 +10,7 @@ RUN cd / && \
   git clone https://github.com/wgerlach/Skycore.git && \
   mkdir -p /etc/nginx/sites-enabled/
 
-# required to update nginx in another container
+# required by confd to reload nginx in separate nginx container
 ADD https://get.docker.com/builds/Linux/x86_64/docker-1.6.0 /usr/bin/docker
 
 # install confd
