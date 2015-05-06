@@ -1,5 +1,5 @@
 
-The image contains both cnginx and confd, but they will be executes in separate containers.
+The image contains both cnginx and confd, but they will be executed in separate containers.
 
 Build image:
 ```bash
