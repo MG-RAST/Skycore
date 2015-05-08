@@ -744,8 +744,8 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 		image_obj = nil
 	} else {
 
-		fmt.Fprintf(os.Stdout, fmt.Sprintf("found image %s, done.\n", image_id))
-		return
+		fmt.Fprintf(os.Stdout, fmt.Sprintf("found image %s.\n", image_id))
+		// do not exit here, we still might have to tag it
 	}
 
 	if image_obj == nil {
