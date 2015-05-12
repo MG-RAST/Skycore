@@ -8,6 +8,7 @@ Requires=docker.service
 # image name:     mgrast/solr-m5nr
 # container name: solr-m5nr
 
+Restart=always
 TimeoutStartSec=0
 EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill solr-m5nr 
