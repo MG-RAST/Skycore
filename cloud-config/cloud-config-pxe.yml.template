@@ -52,6 +52,19 @@ write_files:
                     Type=oneshot
                     RemainAfterExit=yes
                     ExecStart=/usr/sbin/swapon /dev/md0p1
+                - name: redirect_log.service
+                  command: start
+                  content: |
+                    [Unit]
+                    Description=
+                    [Service]
+                    Type=oneshot
+                    RemainAfterExit=yes
+                    ExecStart=/usr/bin/systemctl stop systemd-journald.service
+                    ExecStart=/usr/bin/mkdir -p /media/ephemeral/log
+                    ExecStart=/usr/bin/rm -rf /run/log/
+                    ExecStart=/usr/bin/ln -s /media/ephemeral/log/ /run/log
+                    ExecStart=/usr/bin/systemctl start systemd-journald.service
                 - name: create_docker_directories.service
                   command: start
                   content: |
@@ -217,11 +230,6 @@ write_files:
         sed -i 's/\$_public/$public/g' /tmp/cconfigtmp
         
         mv /tmp/cconfigtmp /run/cloud-config.yml
-    - path: /etc/systemd/journald.conf
-      permissions: '0755'
-      content: |
-        [Journal]
-        Storage=/media/ephemeral/log/
 #    - path: /etc/resolv.conf
 #      permissions: 0644
 #      owner: root
