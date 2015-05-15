@@ -73,16 +73,6 @@ write_files:
                     ExecStart=/usr/bin/umount /tmp
                     ExecStart=/usr/bin/rm -rf /tmp/
                     ExecStart=/usr/bin/ln -s /media/ephemeral/tmp/ /tmp
-                - name: create_run_directory.service
-                  command: start
-                  content: |
-                    [Unit]
-                    Description=Create /media/ephemeral/run/, this is for log files
-                    [Service]
-                    Type=oneshot
-                    RemainAfterExit=yes
-                    ExecStart=/usr/bin/rm -rf /run/
-                    ExecStart=/usr/bin/ln -s /media/ephemeral/run/ /run
                 - name: docker.service
                   drop-ins:
                     - name: 50-docker-location.conf
@@ -227,6 +217,11 @@ write_files:
         sed -i 's/\$_public/$public/g' /tmp/cconfigtmp
         
         mv /tmp/cconfigtmp /run/cloud-config.yml
+    - path: /etc/systemd/journald.conf
+      permissions: '0755'
+      content: |
+        [Journal]
+        Storage=/media/ephemeral/log/
 #    - path: /etc/resolv.conf
 #      permissions: 0644
 #      owner: root
