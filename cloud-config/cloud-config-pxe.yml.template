@@ -72,7 +72,17 @@ write_files:
                     RemainAfterExit=yes
                     ExecStart=/usr/bin/umount /tmp
                     ExecStart=/usr/bin/rm -rf /tmp/
-                    ExecStart=/usr/bin/ln -s /media/ephemeral/tmp/ /tmp    
+                    ExecStart=/usr/bin/ln -s /media/ephemeral/tmp/ /tmp
+                - name: create_run_directory.service
+                  command: start
+                  content: |
+                    [Unit]
+                    Description=Create /media/ephemeral/run/, this is for log files
+                    [Service]
+                    Type=oneshot
+                    RemainAfterExit=yes
+                    ExecStart=/usr/bin/rm -rf /run/
+                    ExecStart=/usr/bin/ln -s /media/ephemeral/run/ /run
                 - name: docker.service
                   drop-ins:
                     - name: 50-docker-location.conf
