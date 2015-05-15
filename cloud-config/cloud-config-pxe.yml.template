@@ -56,7 +56,7 @@ write_files:
                   command: start
                   content: |
                     [Unit]
-                    Description=
+                    Description=Redirect journal log
                     [Service]
                     Type=oneshot
                     RemainAfterExit=yes
