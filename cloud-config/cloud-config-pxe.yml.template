@@ -52,19 +52,6 @@ write_files:
                     Type=oneshot
                     RemainAfterExit=yes
                     ExecStart=/usr/sbin/swapon /dev/md0p1
-                - name: redirect_log.service
-                  command: start
-                  content: |
-                    [Unit]
-                    Description=Redirect journal log
-                    [Service]
-                    Type=oneshot
-                    RemainAfterExit=yes
-                    ExecStart=/usr/bin/systemctl stop systemd-journald.service
-                    ExecStart=/usr/bin/mkdir -p /media/ephemeral/log
-                    ExecStart=/usr/bin/rm -rf /run/log/
-                    ExecStart=/usr/bin/ln -s /media/ephemeral/log/ /run/log
-                    ExecStart=/usr/bin/systemctl start systemd-journald.service
                 - name: create_docker_directories.service
                   command: start
                   content: |
