@@ -70,10 +70,13 @@ You may want to assign a public IP address to one of you CoreOS instances.
 
 ## Optional: Set up fleetctl locally to talk to cluster
 ```bash
+#Linux:
 wget https://github.com/coreos/fleet/releases/download/v0.9.1/fleet-v0.9.1-linux-amd64.tar.gz
 tar xvzf fleet-v0.9.1-linux-amd64.tar.gz
 cp fleet-v0.9.1-linux-amd64/fleetctl /usr/local/bin/
+#OSX:
+brew update & brew install fleetctl
 
-#in your .bashrc
+#Linux/OSX: in your .bashrc
 export FLEETCTL_TUNNEL=<ip address of one coreos instance>
 ```
