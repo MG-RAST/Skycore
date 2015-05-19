@@ -8,6 +8,7 @@ Requires=docker.service
 # image name:     mgrast/v4-web
 # container name: mg-rast-v4-web
 
+Restart=always
 TimeoutStartSec=0
 EnvironmentFile=-/etc/environment
 ExecStartPre=-/usr/bin/docker kill mg-rast-v4-web

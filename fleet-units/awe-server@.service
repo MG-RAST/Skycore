@@ -9,6 +9,7 @@ Requires=awe-server-mongodb@%i.service
 # container name: awe-server-%i
 
 TimeoutStartSec=0
+Restart=always
 EnvironmentFile=-/etc/environment
 Environment='TITLE=Fleet powered AWE server'
 

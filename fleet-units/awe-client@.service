@@ -11,6 +11,7 @@ Requires=docker.service
 # image name:     skyport/awe-client-minimal
 # container name: awe-client
 
+Restart=always
 TimeoutStartSec=0
 EnvironmentFile=-/etc/environment
 Environment='DATADIR=/media/ephemeral/awe-client'
