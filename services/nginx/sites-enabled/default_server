@@ -12,7 +12,7 @@ server {
 	#
 	# include snippets/snakeoil.conf;
 	location /v4/ {
-		rewrite ^/v4/(.*)$ $1 permanent; 
+		rewrite ^/v4/(.*)$ $/1 permanent; 
         	proxy_pass http://metagenomics.anl.gov;
         }
 
