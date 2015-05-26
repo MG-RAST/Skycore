@@ -4,21 +4,21 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-# service name:   mg-rast-v4-web
-# image name:     mgrast/v4-web
-# container name: mg-rast-v4-web
+Environment='CONTAINER=mg-rast-v4-web-%i'
+Environment='IMAGE=mgrast/v4-web'
+Environment='SERVICE=mg-rast-v4-web'
 
 Restart=always
 TimeoutStartSec=0
 EnvironmentFile=-/etc/environment
-ExecStartPre=-/usr/bin/docker kill mg-rast-v4-web
-ExecStartPre=-/usr/bin/docker rm mg-rast-v4-web
-ExecStartPre=/home/core/skycore pull --tag=latest etcd:mg-rast-v4-web
+ExecStartPre=-/usr/bin/docker kill ${CONTAINER}
+ExecStartPre=-/usr/bin/docker rm ${CONTAINER}
+ExecStartPre=/home/core/skycore pull --tag=latest etcd:${SERVICE}
 
-ExecStart=/usr/bin/docker run --rm --name mg-rast-v4-web -p ${COREOS_PRIVATE_IPV4}:8005:80 mgrast/v4-web:latest /usr/sbin/apache2ctl -D FOREGROUND
+ExecStart=/usr/bin/docker run --rm --name ${CONTAINER} -p ${COREOS_PRIVATE_IPV4}:8005:80 ${IMAGE}:latest /usr/sbin/apache2ctl -D FOREGROUND
 ExecStartPost=/usr/bin/sleep 5
-ExecStartPost=/usr/bin/docker exec mg-rast-v4-web bash -c "echo %i > /var/www/html/instance.txt"
-ExecStop=/usr/bin/docker stop mg-rast-v4-web
+ExecStartPost=/usr/bin/docker exec ${CONTAINER} bash -c "echo %i > /var/www/html/instance.txt"
+ExecStop=/usr/bin/docker stop ${CONTAINER}
 
 [X-Fleet]
 Conflicts=mg-rast-v4-web@*.service
