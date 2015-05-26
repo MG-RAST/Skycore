@@ -11,7 +11,8 @@ server {
 	# Don't use them in a production server!
 	#
 	# include snippets/snakeoil.conf;
-	location /v4/ {
+	location /v4 {
+		rewrite /v4(.*)$ $scheme://$host$1 permanent; 
         	proxy_pass http://metagenomics.anl.gov;
         }
 
