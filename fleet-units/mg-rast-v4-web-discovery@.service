@@ -11,7 +11,7 @@ Environment='SERVICE=mg-rast-v4-web'
 
 
 EnvironmentFile=-/etc/environment
-ExecStartPre=/bin/sh -c "while [ $path == \"\" ]; do export path=$(docker inspect --format='{{(index (index .NetworkSettings.Ports \"80/tcp\") 0).HostPort}}' ${CONTAINER} | tr -d '\n' ) ; echo \"path : $path\" ; /usr/bin/sleep 0.1 ; done"
+ExecStartPre=/bin/sh -c "while [ ${path}x == \"x\" ]; do export path=$(docker inspect --format='{{(index (index .NetworkSettings.Ports \"80/tcp\") 0).HostPort}}' ${CONTAINER} | tr -d '\n' ) ; echo \"path : $path\" ; /usr/bin/sleep 0.1 ; done"
 ExecStart=/bin/sh -c "export port=$(docker inspect --format='{{(index (index .NetworkSettings.Ports \"80/tcp\") 0).HostPort}}' ${CONTAINER} | tr -d '\n' ); while true; do etcdctl set /services/${SERVICE}/${SERVICE}@%i \'{ \"host\":\"%H\",\"port\": \"${port}\",\"COREOS_PRIVATE_IPV4\":\"${COREOS_PRIVATE_IPV4}\",\"COREOS_PUBLIC_IPV4\":\"${COREOS_PUBLIC_IPV4}\"}\' --ttl 60 ; sleep 45 ; done"
 ExecStop=/usr/bin/etcdctl rm /services/${SERVICE}/${SERVICE}@%i
 
