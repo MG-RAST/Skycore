@@ -4,17 +4,18 @@ After=awe-server-mongodb@%i.service
 Requires=awe-server-mongodb@%i.service
 
 [Service]
-# service name:   awe-server
-# image name:     skyport/awe-server-minimal
-# container name: awe-server-%i
+Environment='CONTAINER=awe-server-%i'
+Environment='IMAGE=skyport/awe-server-minimal'
+Environment='SERVICE=awe-server'
+
 
 TimeoutStartSec=0
 Restart=always
 EnvironmentFile=-/etc/environment
 Environment='TITLE=Fleet powered AWE server'
 
-ExecStartPre=-/usr/bin/docker kill awe-server-%i
-ExecStartPre=-/usr/bin/docker rm awe-server-%i
+ExecStartPre=-/usr/bin/docker kill ${CONTAINER}
+ExecStartPre=-/usr/bin/docker rm ${CONTAINER}
 ExecStartPre=/home/core/skycore pull --tag=latest etcd:awe-server
 ExecStartPre=/usr/bin/mkdir -p /media/ephemeral/awe-server-%i/
 ExecStartPre=/usr/bin/curl -o /media/ephemeral/awe-server-%i/awe-server.cfg https://raw.githubusercontent.com/wgerlach/AWE_develop/master/awe-server.cfg 
