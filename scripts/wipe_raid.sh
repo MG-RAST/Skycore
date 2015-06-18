@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 
-export DEVICES=/dev/sd{a,b}
+export DEVICES=`echo /dev/sd{a,b}`
 
 umount /media/ephemeral/
 swapoff /dev/md0p1
