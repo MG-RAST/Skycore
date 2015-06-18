@@ -7,11 +7,10 @@ set -e
 export DEVICES=/dev/sd{a,b}
 
 #create /dev/sda1
-COUNTER=1
+
 for device in ${DEVICES} ; do 
-  echo "$COUNTER  ${device}"
-  echo -e -n "n\\n${COUNTER}\\n\\n\\n\\nw\\ny\\n" | gdisk ${device}
-  COUNTER=$[$COUNTER +1]
+  echo "device: ${device}"
+  echo -e -n "n\\n1\\n\\n\\n\\nw\\ny\\n" | gdisk ${device}
 done
 sleep 3
 
