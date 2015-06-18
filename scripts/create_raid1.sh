@@ -4,7 +4,7 @@ set -x
 cat /proc/mdstat
 set -e
 
-export DEVICES=/dev/sd{a,b}
+export DEVICES=`echo /dev/sd{a,b}`
 
 #create /dev/sda1
 
