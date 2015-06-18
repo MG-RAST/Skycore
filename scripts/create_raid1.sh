@@ -4,7 +4,9 @@ set -x
 cat /proc/mdstat
 set -e
 
-export DEVICES=`echo /dev/sd{a,b}`
+export DEVICES_STR="/dev/sd{a,b}"
+export DEVICES=`echo ${DEVICES_STR}`
+export PARTITIONS=`echo ${DEVICES_STR}1`
 
 #create /dev/sda1
 
@@ -15,7 +17,7 @@ done
 sleep 3
 
 # wipe /dev/sda1 /dev/sdb1 to avoid detection of previous RAID
-for device in  ${DEVICES} ; do 
+for device in  ${PARTITIONS} ; do 
  dd if=/dev/zero of=${device} bs=1M count=1 ;
  # wipe last megabyte to get rid of RAID
  # 2048 is 1M/512bytes (getsz returns nuber of 512blocks)
@@ -25,9 +27,9 @@ done
 sleep 3
 
 #create RAID1
-mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda1 /dev/sdb1
+mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 ${PARTITIONS} 
 # RAID6
-#mdadm ––create /dev/md0 ––level=6 ––raid-devices=4 /dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1 
+#mdadm ––create /dev/md0 ––level=6 ––raid-devices=4 ${PARTITIONS} 
 sleep 5
 
 
