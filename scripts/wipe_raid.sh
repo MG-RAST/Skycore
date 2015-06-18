@@ -1,16 +1,18 @@
 #!/bin/bash
 set -x
 
+export DEVICES=/dev/sd{a,b}
+
 umount /media/ephemeral/
 swapoff /dev/md0p1
 
 mdadm --stop /dev/md0
 mdadm --remove /dev/md0
 
-mdadm --zero-superblock /dev/sda1 /dev/sdb1
-mdadm --zero-superblock /dev/sda /dev/sdb
+mdadm --zero-superblock /dev/sd{a,b}1
+mdadm --zero-superblock ${DEVICES}
 
-echo -e -n "o\\ny\\nw\ny\\n" | gdisk /dev/sda
-sleep 2
-echo -e -n "o\\ny\\nw\ny\\n" | gdisk /dev/sdb
-sleep 2
+for device in ${DEVICES} ; do 
+  echo -e -n "o\\ny\\nw\ny\\n" | gdisk ${device}
+  sleep 2
+done
