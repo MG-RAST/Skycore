@@ -22,6 +22,8 @@ sleep 3
 
 #create RAID1
 mdadm --create --metadata=0.90 --verbose /dev/md0 --level=mirror --raid-devices=2 /dev/sda1 /dev/sdb1
+# RAID6
+#mdadm ––create /dev/md0 ––level=6 ––raid-devices=4 /dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1 
 sleep 5
 
 
