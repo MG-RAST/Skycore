@@ -5,8 +5,8 @@ cat /proc/mdstat
 set -e
 
 export DEVICES_STR="/dev/sd{a,b}"
-export DEVICES=`echo ${DEVICES_STR}`
-export PARTITIONS=`echo ${DEVICES_STR}1`
+export DEVICES=$(eval echo ${DEVICES_STR})
+export PARTITIONS=$(eval echo ${DEVICES_STR}1)
 
 #create /dev/sda1
 
