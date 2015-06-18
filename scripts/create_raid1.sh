@@ -4,14 +4,16 @@ set -x
 cat /proc/mdstat
 set -e
 
+export DEVICES=/dev/sd{a,b}
+
 #create /dev/sda1
-echo -e -n "n\\n1\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/sda
-#create /dev/sdb1
-echo -e -n "n\\n1\\n\\n\\n\\nw\\ny\\n" | gdisk /dev/sdb
+for device in ${DISKS} ; do 
+  echo -e -n "n\\n1\\n\\n\\n\\nw\\ny\\n" | gdisk ${device}
+done
 sleep 3
 
 # wipe /dev/sda1 /dev/sdb1 to avoid detection of previous RAID
-for device in /dev/sda1 /dev/sdb1 ; do 
+for device in  ${DEVICES} ; do 
  dd if=/dev/zero of=${device} bs=1M count=1 ;
  # wipe last megabyte to get rid of RAID
  # 2048 is 1M/512bytes (getsz returns nuber of 512blocks)
