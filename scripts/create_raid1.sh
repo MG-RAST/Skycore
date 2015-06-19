@@ -51,3 +51,6 @@ fdisk -l
 /usr/sbin/wipefs -f /dev/md0p2
 
 fdisk -l
+
+# may require:
+#mdadm --readwrite /dev/md0
