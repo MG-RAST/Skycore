@@ -1,7 +1,8 @@
 #!/bin/bash
 set -x
 
-export DEVICES=`echo /dev/sd{a,b}`
+export DEVICES_STR="/dev/sd{a,b}"
+export DEVICES=$(eval echo ${DEVICES_STR})
 
 umount /media/ephemeral/
 swapoff /dev/md0p1
