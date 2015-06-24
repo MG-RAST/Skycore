@@ -23,15 +23,15 @@ https://github.com/wgerlach/Skycore#example-deployment-process-for-a-fleet-servi
 
 Script to register all services in MG-RAST:
 
-https://github.com/wgerlach/Skycore/blob/master/register_docker_image_for_service_all.sh
+https://github.com/MG-RAST/MG-RAST-infrastructure/blob/master/register_docker_image_for_service_all.sh
 
 Fleet unit:
 
-https://github.com/wgerlach/Skycore/blob/master/fleet-units/mg-rast-v4-web%40.service
+https://github.com/MG-RAST/MG-RAST-infrastructure/blob/master/fleet-units/mg-rast-v4-web%40.service
 
 Fleet unit discovery:
 
-https://github.com/wgerlach/Skycore/blob/master/fleet-units/mg-rast-v4-web-discovery%40.service
+https://github.com/MG-RAST/MG-RAST-infrastructure/blob/master/fleet-units/mg-rast-v4-web-discovery%40.service
 
 Starting a service:
 
@@ -51,11 +51,11 @@ https://github.com/wgerlach/Skycore/blob/master/documentation/pxe-boot-array-set
 
 Script to create cloud-config from template:
 
-https://github.com/wgerlach/Skycore/blob/master/cloud-config/update_cloud_config_pxe.sh
+https://github.com/MG-RAST/MG-RAST-infrastructure/blob/master/cloud-config/update_cloud_config_pxe.sh
 
 Cloud-config template file. Use update_cloud_config_pxe.sh to create actual cloud-config file. This is a two-step cloud-config file:
 
-https://github.com/wgerlach/Skycore/blob/master/cloud-config/cloud-config-pxe.yml.template
+https://github.com/MG-RAST/MG-RAST-infrastructure/blob/master/cloud-config/cloud-config-pxe.yml.template
 
 
 
