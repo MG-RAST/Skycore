@@ -1,29 +1,21 @@
 # Skycore factory - a compilation container
 
-#FROM ubuntu:14.04
-FROM skyport/awe
+FROM ubuntu:14.04
 
-RUN apt-get update ; apt-get install -y \
-	#golang \
-	#git \
-	build-essential # needed for static compilation
+RUN apt-get update && apt-get install -y \
+	git-core \
+	bzr \
+	make \
+	gcc \
+	mercurial \
+	ca-certificates \
+	curl
 
 
-#AWE source
-RUN mkdir -p /gopath/src/github.com/MG-RAST ; \
-	cd /gopath/src/github.com/MG-RAST && \
-	rm -rf AWE ; \
-	git clone -b master https://github.com/wgerlach/AWE.git
+RUN curl -s https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar -v -C /usr/local -xz
 
-RUN mkdir -p /gopath/src/github.com/MG-RAST ; \
-	cd /gopath/src/github.com/MG-RAST && \
-	rm -rf go-dockerclient ; \
-	git clone -b develop https://github.com/MG-RAST/go-dockerclient.git
-
-RUN mkdir -p /gopath/src/github.com/wgerlach ; \
-	cd /gopath/src/github.com/wgerlach && \
-	git clone -b master https://github.com/wgerlach/Skycore.git
-
+ENV GOROOT /usr/local/go
+ENV PATH /usr/local/go/bin:/gopath/bin:/usr/local/bin:$PATH
 ENV GOPATH /gopath/
 
 # compile.sh script for 
