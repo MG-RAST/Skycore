@@ -8,6 +8,16 @@ Either use the Dockerfile in this repository to statically compile skycore (The 
 ```bash
 wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
 ```
+## Skycore from source
+```bash
+go get github.com/wgerlach/Skycore/skycore
+```
+## update skycore vendors
+```bash
+git clone --recursive git@github.com:wgerlach/Skycore.git
+cd Skycore/skycore
+party -d vendor -c -u
+```
 
 ## Example deployment process for a fleet service using skycore
 Build image (requires docker):
