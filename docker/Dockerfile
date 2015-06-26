@@ -21,7 +21,7 @@ ENV GOPATH /gopath/
 
 # compile.sh script for 
 RUN echo '#!/bin/bash' > /compile.sh ; \
-  echo 'export GOPATH=/gopath/ ; export CGO_ENABLED=0 ; go get -a -v github.com/wgerlach/Skycore/skycore' >> /compile.sh ; \
+  echo 'export GOPATH=/gopath/ ; export CGO_ENABLED=0 ; go get -a -installsuffix cgo -v github.com/wgerlach/Skycore/skycore' >> /compile.sh ; \
   chmod +x /compile.sh
 
 
