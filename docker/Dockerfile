@@ -1,6 +1,6 @@
 # Skycore factory - a compilation container
 
-FROM ubuntu:14.04
+FROM mgrast/golang:1.4.2
 
 RUN apt-get update && apt-get install -y \
   git-core \
