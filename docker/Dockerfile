@@ -14,7 +14,7 @@ ENV GOPATH /gopath/
 
 RUN /bin/mkdir -p /gopath/src/github.com/wgerlach/ && \
   cd /gopath/src/github.com/wgerlach/ && \
-  git clone --recursive git@github.com:wgerlach/Skycore.git
+  git clone --recursive https://github.com/wgerlach/Skycore.git
 
 # compile.sh script for 
 RUN echo '#!/bin/bash' > /compile.sh ; \
