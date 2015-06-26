@@ -10,9 +10,9 @@ import (
 	"flag"
 	"fmt"
 	"github.com/MG-RAST/AWE/lib/shock"
-	"github.com/MG-RAST/go-dockerclient"
 	"github.com/MG-RAST/golib/go-uuid/uuid"
-	"github.com/coreos/go-etcd/etcd"
+	"github.com/fsouza/go-dockerclient"
+	"github.com/wgerlach/Skycore/skycore/go-etcd-0.4/etcd"
 	"io"
 	"mime/multipart"
 	"net/http" // should all be done by shock lib

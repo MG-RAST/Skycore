@@ -1,0 +1,4 @@
+[submodule "skycore/go-etcd-0.4"]
+	path = skycore/go-etcd-0.4
+	url = https://github.com/coreos/go-etcd.git
+	branch = release-0.4
