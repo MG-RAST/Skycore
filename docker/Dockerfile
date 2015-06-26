@@ -3,13 +3,14 @@
 FROM ubuntu:14.04
 
 RUN apt-get update && apt-get install -y \
-	git-core \
-	bzr \
-	make \
-	gcc \
-	mercurial \
-	ca-certificates \
-	curl
+  git-core \
+  bzr \
+  make \
+  gcc \
+  mercurial \
+  ca-certificates \
+  curl \
+  build-essential
 
 
 RUN curl -s https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar -v -C /usr/local -xz
@@ -20,8 +21,8 @@ ENV GOPATH /gopath/
 
 # compile.sh script for 
 RUN echo '#!/bin/bash' > /compile.sh ; \
-	echo 'export GOPATH=/gopath/ ; export CGO_ENABLED=0 ; go get -a -v github.com/wgerlach/Skycore/skycore' >> /compile.sh ; \
-	chmod +x /compile.sh
+  echo 'export GOPATH=/gopath/ ; export CGO_ENABLED=0 ; go get -a -v github.com/wgerlach/Skycore/skycore' >> /compile.sh ; \
+  chmod +x /compile.sh
 
 
 ### build container
