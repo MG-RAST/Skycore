@@ -14,7 +14,9 @@ go get github.com/wgerlach/Skycore/skycore
 ```
 ## update skycore vendors
 ```bash
-git clone --recursive git@github.com:wgerlach/Skycore.git
+go get -v github.com/mjibson/party
+cd $GOPATH/src/github.com/wgerlach/
+git clone --recursive https://github.com/wgerlach/Skycore.git
 cd Skycore/skycore
 party -d vendor -c -u
 ```
