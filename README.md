@@ -8,10 +8,30 @@ Either use the Dockerfile in this repository to statically compile skycore (The 
 ```bash
 wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
 ```
-## Skycore from source
+## Skycore from source (requires golang)
 ```bash
 go get github.com/wgerlach/Skycore/skycore
 ```
+
+### Build container
+```bash
+docker build --tag skycore/factory:latest .
+```
+
+### Use container to compile and get binary:
+```bash
+mkdir -p ~/skycore_bin
+docker run -t -i --name sky_fac -v ~/skycore_bin:/gopath/bin skycore/factory:latest bash
+cd /gopath/src/github.com/wgerlach/Skycore && git pull && /compile.sh
+```
+
+### skycore execution within container
+```bash
+# container will need access to docker socket
+mkdir -p ~/skycore_bin
+docker run -t -i -v /var/run/docker.sock:/var/run/docker.sock --name sky_fac -v ~/skycore_bin:/gopath/bin skycore/factory:latest bash
+```
+
 ## update skycore vendors
 ```bash
 go get -v github.com/mjibson/party
