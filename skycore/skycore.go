@@ -255,7 +255,6 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 		return "", errors.New("error: skyc.Shock_client.Host not defined")
 	}
 
-
 	// inspect
 	image_obj, err := skyc.Docker_client.InspectImage(name)
 	image_id := ""
@@ -267,7 +266,6 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 		fmt.Fprintf(os.Stdout, fmt.Sprintf("found image_id: %s\n", image_id))
 	}
 
-
 	if skyc.Shock_client.Token == "" {
 		fmt.Fprintf(os.Stdout, "Please provide Shock token (or use option --token):\n")
 		var user_token string
@@ -277,7 +275,6 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 		}
 		skyc.Shock_client.Token = user_token
 	}
-
 
 	// *** export (save) image from docker engine
 	image_raw_reader, err := skyc.ExportImageNonBlocking(image_id)
@@ -342,8 +339,6 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 	if err != nil {
 		return
 	}
-
-	
 
 	if skyc.Shock_client.Token != "" {
 		fmt.Fprintf(os.Stdout, "using token\n")
@@ -444,7 +439,12 @@ func get_attribute_string(attr_map map[string]interface{}, key string) (value st
 
 func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image_repository string, image_tag string, image_id string, err error) {
 
-	node_response, err := skyc.Shock_client.Get_node(node_id)
+	node_response := new(shock.ShockResponse)
+	node_response.Data.Attributes = new(docker.Image)
+
+	err = skyc.Shock_client.Get_request("/node/"+node_id, nil, &node_response)
+
+	// node_response, err := skyc.Shock_client.Get_node(node_id)
 
 	if err != nil {
 		err = errors.New(fmt.Sprintf("error getting shock node: ", err.Error()))
@@ -794,7 +794,7 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 	if request_tag != "" {
 
 		new_image_name := image_repository + ":" + request_tag
-		fmt.Fprintf(os.Stdout, "trying to set additional tag %s", new_image_name)
+		fmt.Fprintf(os.Stdout, "trying to set additional tag %s\n", new_image_name)
 
 		do_tag := false
 		some_old_image_obj, err := skyc.Docker_client.InspectImage(new_image_name)
