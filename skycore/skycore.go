@@ -50,6 +50,22 @@ type Dockerimage_attributes struct {
 	Image          *docker.Image `json:"image"` // warning: size cannot be stored in AND retrieved from JSON (int64 vs float64)
 }
 
+type ShockResponseNoData struct {
+	Code int      `bson:"status" json:"status"`
+	Errs []string `bson:"error" json:"error"`
+	//Data ShockNode `bson:"data" json:"data"`
+}
+
+type DockerimageSNode struct {
+	shock.ShockNode
+	Attributes Dockerimage_attributes
+}
+
+type DockerimageSNode_response struct {
+	shock.ShockResponse
+	Data DockerimageSNode
+}
+
 // shock.metagenomics.anl.gov
 
 // git pull ; ./compile.sh && sudo ./skyc load --shock shock.metagenomics.anl.gov 7c10f6dd-5291-45fe-a938-e2ae2027482a
@@ -438,10 +454,7 @@ func get_attribute_string(attr_map map[string]interface{}, key string) (value st
 
 func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image_repository string, image_tag string, image_id string, err error) {
 
-	node_response := new(shock.ShockResponse)
-
-	var docker_attr Dockerimage_attributes
-	node_response.Data.Attributes = docker_attr
+	node_response := new(DockerimageSNode_response)
 
 	err = skyc.Shock_client.Get_request("/node/"+node_id, nil, &node_response)
 
@@ -457,24 +470,25 @@ func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image
 		err = errors.New(fmt.Sprintf("error getting shock node: %s", strings.Join(node_response.Errs, ",")))
 	}
 
-	docker_attr2 := node_response.Data.Attributes.(Dockerimage_attributes)
+	//docker_attr2 := node_response.Data.Attributes.(Dockerimage_attributes)
+	//docker_attr2 := node_response.Data.Attributes
 
-	attr_json, err := json.Marshal(node_response.Data.Attributes) // ugly hack to get attributes (type: map[string]interface{}) into struct
+	//attr_json, err := json.Marshal(node_response.Data.Attributes) // ugly hack to get attributes (type: map[string]interface{}) into struct
 
 	//var docker_attr Dockerimage_attributes
-	err = json.Unmarshal(attr_json, &docker_attr2)
-	if err != nil {
-		err = errors.New(fmt.Sprintf("error Unmarshal: ", err.Error()))
-		return
-	}
+	//err = json.Unmarshal(attr_json, &docker_attr2)
+	//if err != nil {
+	//	err = errors.New(fmt.Sprintf("error Unmarshal: ", err.Error()))
+	//	return
+	//}
 
 	//image_repository = docker_attr.Repository
 	//image_tag = docker_attr.Tag
 	//image_id = docker_attr.Id
-
-	image_repository = docker_attr2.Repository
-	image_tag = docker_attr2.Tag
-	image_id = docker_attr2.Id
+	docker_attr := node_response.Data.Attributes
+	image_repository = docker_attr.Repository
+	image_tag = docker_attr.Tag
+	image_id = docker_attr.Id
 
 	//attr_map, ok := node_response.Data.Attributes.(map[string]interface{}) // is of type map[string]interface{}
 
