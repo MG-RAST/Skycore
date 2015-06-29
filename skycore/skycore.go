@@ -255,6 +255,7 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 		return "", errors.New("error: skyc.Shock_client.Host not defined")
 	}
 
+
 	// inspect
 	image_obj, err := skyc.Docker_client.InspectImage(name)
 	image_id := ""
@@ -265,6 +266,18 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 		image_id = image_obj.ID
 		fmt.Fprintf(os.Stdout, fmt.Sprintf("found image_id: %s\n", image_id))
 	}
+
+
+	if skyc.Shock_client.Token == "" {
+		fmt.Fprintf(os.Stdout, "Please provide Shock token (or use option --token):\n")
+		var user_token string
+		_, err = fmt.Scanf("%s\n", &user_token)
+		if err != nil {
+			return
+		}
+		skyc.Shock_client.Token = user_token
+	}
+
 
 	// *** export (save) image from docker engine
 	image_raw_reader, err := skyc.ExportImageNonBlocking(image_id)
@@ -330,15 +343,7 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 		return
 	}
 
-	if skyc.Shock_client.Token == "" {
-		fmt.Fprintf(os.Stdout, "Please provide Shock token (or use option --token):\n")
-		var user_token string
-		_, err = fmt.Scanf("%s\n", &user_token)
-		if err != nil {
-			return
-		}
-		skyc.Shock_client.Token = user_token
-	}
+	
 
 	if skyc.Shock_client.Token != "" {
 		fmt.Fprintf(os.Stdout, "using token\n")
