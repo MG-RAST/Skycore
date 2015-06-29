@@ -39,12 +39,11 @@ type Skycore struct {
 
 type Dockerimage_attributes struct {
 	//Temporary  string `json:"temporary"`
-	Type       string `json:"type"`       // required= "dockerimage"
-	Id         string `json:"id"`         // required
-	Name       string `json:"name"`       // required
-	Repository string `json:"repository"` // required
-	Tag        string `json:"tag"`        // required
-	//Docker_version interface{}   `json:"docker_version"` // deprecataed, better use complete Image
+	Type           string        `json:"type"`       // required= "dockerimage"
+	Id             string        `json:"id"`         // required
+	Name           string        `json:"name"`       // required
+	Repository     string        `json:"repository"` // required
+	Tag            string        `json:"tag"`        // required
 	Base_image_tag string        `json:"base_image_tag"`
 	Base_image_id  string        `json:"base_image_id"`
 	Dockerfile     string        `json:"dockerfile"`
@@ -442,7 +441,7 @@ func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image
 	node_response := new(shock.ShockResponse)
 
 	var docker_attr Dockerimage_attributes
-	node_response.Data.Attributes = &docker_attr
+	node_response.Data.Attributes = docker_attr
 
 	err = skyc.Shock_client.Get_request("/node/"+node_id, nil, &node_response)
 
