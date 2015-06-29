@@ -473,7 +473,9 @@ func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image
 	//docker_attr2 := node_response.Data.Attributes.(Dockerimage_attributes)
 	//docker_attr2 := node_response.Data.Attributes
 
-	//attr_json, err := json.Marshal(node_response.Data.Attributes) // ugly hack to get attributes (type: map[string]interface{}) into struct
+	attr_json, err := json.Marshal(node_response.Data.Attributes) // ugly hack to get attributes (type: map[string]interface{}) into struct
+
+	fmt.Sprintf("marshal: %s", attr_json)
 
 	//var docker_attr Dockerimage_attributes
 	//err = json.Unmarshal(attr_json, &docker_attr2)
