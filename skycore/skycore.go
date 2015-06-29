@@ -984,7 +984,7 @@ func main() {
 			fmt.Fprintf(os.Stderr, "error: %s\n", err.Error())
 			os.Exit(1)
 		}
-		fmt.Fprintf(os.Stdout, "uploaded image: "+node_id+"\n")
+		fmt.Fprintf(os.Stdout, "New Shock node id: "+node_id+"\n")
 
 		break
 	case "help":
