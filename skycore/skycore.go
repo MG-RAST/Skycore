@@ -440,7 +440,9 @@ func get_attribute_string(attr_map map[string]interface{}, key string) (value st
 func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image_repository string, image_tag string, image_id string, err error) {
 
 	node_response := new(shock.ShockResponse)
-	node_response.Data.Attributes = new(docker.Image)
+
+	var docker_attr Dockerimage_attributes
+	node_response.Data.Attributes = &docker_attr
 
 	err = skyc.Shock_client.Get_request("/node/"+node_id, nil, &node_response)
 
@@ -458,13 +460,17 @@ func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image
 
 	//docker_attr := node_response.Data.Attributes.(Dockerimage_attributes)
 
-	attr_json, err := json.Marshal(node_response.Data.Attributes) // ugly hack to get attributes (type: map[string]interface{}) into struct
+	//attr_json, err := json.Marshal(node_response.Data.Attributes) // ugly hack to get attributes (type: map[string]interface{}) into struct
 
-	var docker_attr Dockerimage_attributes
-	err = json.Unmarshal(attr_json, &docker_attr)
-	if err != nil {
-		return
-	}
+	//var docker_attr Dockerimage_attributes
+	//err = json.Unmarshal(attr_json, &docker_attr)
+	//if err != nil {
+	//	return
+	//}
+
+	//image_repository = docker_attr.Repository
+	//image_tag = docker_attr.Tag
+	//image_id = docker_attr.Id
 
 	image_repository = docker_attr.Repository
 	image_tag = docker_attr.Tag
