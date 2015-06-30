@@ -19,7 +19,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
-	"reflect"
+
 	"strconv"
 	"strings"
 	"time"
@@ -457,38 +457,27 @@ func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image
 
 	json_str, err := skyc.Shock_client.Do_request_string("GET", "/node/"+node_id, nil)
 
+	if err != nil {
+		err = errors.New(fmt.Sprintf("error getting shock node: ", err.Error()))
+		return
+
+	}
 	fmt.Println(json_str)
 
 	d := json.NewDecoder(strings.NewReader(string(json_str[:])))
 	d.UseNumber()
 
 	node_response := new(DockerimageSNode_response)
-	result, err := json.Marshal(node_response)
-	fmt.Printf("encoded to %s\n", result)
 
-	os.Exit(0)
+	err = d.Decode(&node_response)
+
+	//os.Exit(0)
 
 	//node_response := new(DockerimageSNode_response)
 
-	//test := node_response.Data.Attributes.Image.VirtualSize
-	fmt.Println(reflect.TypeOf(node_response))
-	fmt.Println(reflect.TypeOf(node_response.Data))
-	fmt.Println(reflect.TypeOf(node_response.Data.Attributes))
-	fmt.Println(reflect.TypeOf(node_response.Data.Attributes.Image))
-
-	fmt.Println(reflect.TypeOf(node_response.Data.Attributes.Image.VirtualSize))
-
-	//fmt.Println(reflect.TypeOf(test))
-
-	err = skyc.Shock_client.Get_request("/node/"+node_id, nil, &node_response)
+	//err = skyc.Shock_client.Get_request("/node/"+node_id, nil, &node_response)
 
 	// node_response, err := skyc.Shock_client.Get_node(node_id)
-
-	if err != nil {
-		err = errors.New(fmt.Sprintf("error getting shock node: ", err.Error()))
-		return
-
-	}
 
 	if len(node_response.Errs) > 0 {
 		err = errors.New(fmt.Sprintf("error getting shock node: %s", strings.Join(node_response.Errs, ",")))
