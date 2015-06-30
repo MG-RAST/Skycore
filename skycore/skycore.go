@@ -58,12 +58,12 @@ type ShockResponseNoData struct {
 
 type DockerimageSNode struct {
 	shock.ShockNode
-	Attributes Dockerimage_attributes
+	Attributes Dockerimage_attributes `bson:"attributes" json:"attributes"`
 }
 
 type DockerimageSNode_response struct {
 	shock.ShockResponse
-	Data DockerimageSNode
+	Data DockerimageSNode `bson:"data" json:"data"`
 }
 
 // shock.metagenomics.anl.gov
