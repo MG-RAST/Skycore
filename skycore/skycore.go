@@ -40,15 +40,15 @@ type Skycore struct {
 
 type Dockerimage_attributes struct {
 	//Temporary  string `json:"temporary"`
-	Type           string        `json:"type"`       // required= "dockerimage"
-	Id             string        `json:"id"`         // required
-	Name           string        `json:"name"`       // required
-	Repository     string        `json:"repository"` // required
-	Tag            string        `json:"tag"`        // required
-	Base_image_tag string        `json:"base_image_tag"`
-	Base_image_id  string        `json:"base_image_id"`
-	Dockerfile     string        `json:"dockerfile"`
-	Image          *docker.Image `json:"image"` // warning: size cannot be stored in AND retrieved from JSON (int64 vs float64)
+	Type           string       `json:"type"`       // required= "dockerimage"
+	Id             string       `json:"id"`         // required
+	Name           string       `json:"name"`       // required
+	Repository     string       `json:"repository"` // required
+	Tag            string       `json:"tag"`        // required
+	Base_image_tag string       `json:"base_image_tag"`
+	Base_image_id  string       `json:"base_image_id"`
+	Dockerfile     string       `json:"dockerfile"`
+	Image          docker.Image `json:"image"` // warning: size cannot be stored in AND retrieved from JSON (int64 vs float64)
 }
 
 type ShockResponseNoData struct {
@@ -313,7 +313,7 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 		Repository: repository,
 		Tag:        tag,
 		//Docker_version: version.Map(),
-		Image: image_obj,
+		Image: *image_obj,
 	}
 
 	// other keys used before
@@ -462,9 +462,8 @@ func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image
 	fmt.Println(reflect.TypeOf(node_response.Data))
 	fmt.Println(reflect.TypeOf(node_response.Data.Attributes))
 	fmt.Println(reflect.TypeOf(node_response.Data.Attributes.Image))
+
 	//fmt.Println(reflect.TypeOf(test))
-	
-	
 
 	err = skyc.Shock_client.Get_request("/node/"+node_id, nil, &node_response)
 
