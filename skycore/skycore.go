@@ -687,7 +687,6 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 		fmt.Fprintf(os.Stdout, "shock_node_url_obj.Host: "+shock_node_url_obj.Host+"\n")
 		fmt.Fprintf(os.Stdout, "shock_node_url_obj.Path: "+shock_node_url_obj.Path+"\n")
 
-
 		shock_node_url_obj.RawQuery = "" // removes the shock node "?download" suffix
 
 		node_id = strings.TrimPrefix(shock_node_url_obj.Path, "/node/")
@@ -793,6 +792,15 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 
 		fmt.Fprintf(os.Stdout, fmt.Sprintf("found image %s.\n", image_id))
 		// do not exit here, we still might have to tag it
+
+		// test if image has correct tag
+		if request_tag != "" {
+			_, err := skyc.Docker_client.InspectImage(image_tag)
+			if err != nil {
+				// needs tag
+				request_tag = image_tag
+			}
+		}
 	}
 
 	if image_obj == nil {
