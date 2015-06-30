@@ -455,7 +455,20 @@ func get_attribute_string(attr_map map[string]interface{}, key string) (value st
 
 func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image_repository string, image_tag string, image_id string, err error) {
 
+	json_str, err := skyc.Shock_client.Do_request_string("GET", "/node/"+node_id, nil)
+
+	fmt.Println(json_str)
+
+	d := json.NewDecoder(strings.NewReader(string(json_str[:])))
+	d.UseNumber()
+
 	node_response := new(DockerimageSNode_response)
+	result, err := json.Marshal(node_response)
+	fmt.Printf("encoded to %s\n", result)
+
+	os.Exit(0)
+
+	//node_response := new(DockerimageSNode_response)
 
 	//test := node_response.Data.Attributes.Image.VirtualSize
 	fmt.Println(reflect.TypeOf(node_response))
