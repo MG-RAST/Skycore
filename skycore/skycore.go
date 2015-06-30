@@ -19,6 +19,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -455,6 +456,8 @@ func get_attribute_string(attr_map map[string]interface{}, key string) (value st
 func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image_repository string, image_tag string, image_id string, err error) {
 
 	node_response := new(DockerimageSNode_response)
+
+	fmt.Println(reflect.TypeOf(node_response.Data.Attributes.Image.VirtualSize))
 
 	err = skyc.Shock_client.Get_request("/node/"+node_id, nil, &node_response)
 
