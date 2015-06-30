@@ -463,6 +463,8 @@ func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image
 	fmt.Println(reflect.TypeOf(node_response.Data.Attributes))
 	fmt.Println(reflect.TypeOf(node_response.Data.Attributes.Image))
 
+	fmt.Println(reflect.TypeOf(node_response.Data.Attributes.Image.VirtualSize))
+
 	//fmt.Println(reflect.TypeOf(test))
 
 	err = skyc.Shock_client.Get_request("/node/"+node_id, nil, &node_response)
