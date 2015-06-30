@@ -687,9 +687,6 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 		fmt.Fprintf(os.Stdout, "shock_node_url_obj.Host: "+shock_node_url_obj.Host+"\n")
 		fmt.Fprintf(os.Stdout, "shock_node_url_obj.Path: "+shock_node_url_obj.Path+"\n")
 
-		if skyc.Shock_client.Host != "" {
-			fmt.Fprintf(os.Stdout, fmt.Sprintf("warning: ignoring --shock argument, will use etcd value\n"))
-		}
 
 		shock_node_url_obj.RawQuery = "" // removes the shock node "?download" suffix
 
