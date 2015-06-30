@@ -798,6 +798,7 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 			_, err := skyc.Docker_client.InspectImage(image_tag)
 			if err != nil {
 				// needs tag
+				fmt.Fprintf(os.Stdout, fmt.Sprintf("found image but I still have to tag it: %s\n", image_tag))
 				request_tag = image_tag
 			}
 		}
