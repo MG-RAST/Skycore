@@ -794,7 +794,7 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 		// do not exit here, we still might have to tag it
 
 		// test if image has correct tag
-		if request_tag != "" {
+		if request_tag == "" {
 			_, err := skyc.Docker_client.InspectImage(image_tag)
 			if err != nil {
 				// needs tag
