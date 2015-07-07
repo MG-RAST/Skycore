@@ -41,22 +41,6 @@ cd Skycore/skycore
 party -d vendor -c -u
 ```
 
-## Example deployment process for a fleet service using skycore
-Build image (requires docker):
-```bash
-docker build --tag=mgrast/m5nr-solr:20150223_1700 --force-rm --no-cache https://raw.githubusercontent.com/MG-RAST/myM5NR/master/solr/docker/Dockerfile
-```
-Upload image to Shock:
-```bash
-skycore push --shock=http://shock.metagenomics.anl.gov --token=$TOKEN mgrast/m5nr-solr:20150223_1700
-```
-Register shock node (of the new image) with etcd (requires etcd access):
-```bash
-curl -L http://127.0.0.1:4001/v2/keys/service_images/m5nr-solr/shock -XPUT -d value="shock.metagenomics.anl.gov/node/<node_id>"
-```
-Please update/add the corresponding line register_docker_image_for_service_all.sh .
-
-And restart fleet service... either with fleetctl or fleet api..
 
 
 ## Deploy the skycore binary on your CoreOS machines
@@ -87,15 +71,3 @@ chmod +x skycore
 for i in ${MACHINES} ; do scp -i ~/.ssh/coreos.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
 ```
 
-## Docker image registration for services with etcd
-Once you have built and uploaded a new Docker image for a particular service to Shock, you need to update the etcd configuration to point to the new Shock node. To get access to etcd you probably have to log into one of the machines. The service name has to match the unit name, for example "mg-rast-v4-web":
-```bash
-curl -L http://127.0.0.1:4001/v2/keys/service_images/<servicename>/shock -XPUT -d value="shock.metagenomics.anl.gov/node/<node>"
-```
-
-You can read the current configuration with the same url:
-```bash
-curl -L http://127.0.0.1:4001/v2/keys/service_images/<servicename>/shock
-```
-
-You can also use the etcdctl command to modify values and to browse the etcd tree. For example "etcdctl ls /service_images/" will show for which services Docker images are registered.
