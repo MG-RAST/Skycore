@@ -358,7 +358,7 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 
 	if skyc.Shock_client.Token != "" {
 		fmt.Fprintf(os.Stdout, "using token\n")
-		request.Header.Add("Authorization", "OAuth "+skyc.Shock_client.Token)
+		request.Header.Add("Authorization", skyc.Shock_client.Token)
 	}
 	if err != nil {
 		return
