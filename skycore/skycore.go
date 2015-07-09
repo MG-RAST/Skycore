@@ -20,6 +20,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"bufio"
 	"strconv"
 	"strings"
 	"time"
@@ -284,12 +285,14 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 
 	if skyc.Shock_client.Token == "" {
 		fmt.Fprintf(os.Stdout, "Please provide Shock token (or use option --token):\n")
-		var user_token string
-		_, err = fmt.Scanln(&user_token)
-		if err != nil {
+		bio := bufio.NewReader(os.Stdin)
+		user_token, _, xerr := bio.ReadLine()
+		//var user_token string
+		//_, err = fmt.Scanln(&user_token)
+		if xerr != nil {
 			return
 		}
-		skyc.Shock_client.Token = user_token
+		skyc.Shock_client.Token = string(user_token[:])
 	}
 
 	// *** export (save) image from docker engine
