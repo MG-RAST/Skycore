@@ -903,6 +903,8 @@ func main() {
 
 	var etcd_urls []string
 
+	fmt.Fprintf(os.Stdout, fmt.Sprintf("skycore args: %s\n", strings.Join(os.Args, " ")))
+
 	flags = flag.NewFlagSet("name", flag.ContinueOnError)
 
 	flags.StringVar(&shock_url, "shock", shock_url_default, "url of Shock server")
