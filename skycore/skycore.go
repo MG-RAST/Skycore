@@ -294,6 +294,7 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 			return
 		}
 		skyc.Shock_client.Token = string(user_token[:])
+		fmt.Fprintf(os.Stdout, fmt.Sprintf("using token: \"%s\"\n", skyc.Shock_client.Token))
 	}
 
 	// *** export (save) image from docker engine
