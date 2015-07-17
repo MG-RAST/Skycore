@@ -291,7 +291,7 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 		//var user_token string
 		//_, err = fmt.Scanln(&user_token)
 		if xerr != nil {
-			return
+			return "", xerr
 		}
 		skyc.Shock_client.Token = string(user_token[:])
 		fmt.Fprintf(os.Stdout, fmt.Sprintf("using token: \"%s\"\n", skyc.Shock_client.Token))
