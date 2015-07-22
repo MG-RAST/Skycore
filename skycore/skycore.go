@@ -373,11 +373,15 @@ func (skyc *Skycore) save_image_to_shock(name string, private_image bool) (node 
 	fmt.Fprintf(os.Stdout, "Do request\n")
 	resp, err := client.Do(request)
 	if err != nil {
-		contents, err2 := ioutil.ReadAll(resp.Body)
-		if err2 != nil {
-			fmt.Fprintf(os.Stderr, "response body: "+string(contents)+"\n")
-		}
 
+		if resp != nil && resp.Body != nil {
+			contents, err2 := ioutil.ReadAll(resp.Body)
+			if err2 != nil {
+				fmt.Fprintf(os.Stderr, "response body: "+string(contents)+"\n")
+			}
+		} else {
+			fmt.Fprintf(os.Stderr, "empty response !?\n")
+		}
 		return
 	}
 
