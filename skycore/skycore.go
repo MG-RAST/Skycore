@@ -38,6 +38,7 @@ type Skycore struct {
 	Shock_client  shock.ShockClient
 	Docker_client *docker.Client
 	Etcd_client   *etcd.Client
+	Etcd_urls     []string
 }
 
 type Dockerimage_attributes struct {
@@ -561,6 +562,9 @@ func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image
 
 func (skyc *Skycore) Get_etcd_value(path string) (value string, err error) {
 
+	if skyc.Etcd_client == nil {
+		skyc.Etcd_client = etcd.NewClient(skyc.Etcd_urls)
+	}
 	fmt.Fprintf(os.Stdout, "reading etcd "+path+"\n")
 	response, err := skyc.Etcd_client.Get(path, false, false)
 	if err != nil {
@@ -587,6 +591,10 @@ func (skyc *Skycore) Get_etcd_shock2image(node_id string) (image_id string) {
 
 func (skyc *Skycore) Set_etcd_shock2image(node_id string, image_id string) {
 
+	if skyc.Etcd_client == nil {
+		skyc.Etcd_client = etcd.NewClient(skyc.Etcd_urls)
+	}
+
 	etcd_key := "/skycore/shock2image/" + node_id
 
 	_, err := skyc.Etcd_client.Set(etcd_key, image_id, 0)
@@ -606,8 +614,13 @@ func (skyc *Skycore) Set_etcd_image(image_id string, etcd_repository string, etc
 		return
 	}
 
+	if skyc.Etcd_client == nil {
+		skyc.Etcd_client = etcd.NewClient(skyc.Etcd_urls)
+	}
+
 	//c := etcd.NewClient(etcd_urls)
 	c := skyc.Etcd_client
+
 	etcd_key := "/skycore/image/" + image_id
 
 	_, err := c.Set(etcd_key+"/repository", etcd_repository, 0)
@@ -627,6 +640,10 @@ func (skyc *Skycore) Set_etcd_image(image_id string, etcd_repository string, etc
 }
 
 func (skyc *Skycore) Get_etcd_image(image_id string) (etcd_repository string, etcd_tag string, etcd_shock_node string) {
+
+	if skyc.Etcd_client == nil {
+		skyc.Etcd_client = etcd.NewClient(skyc.Etcd_urls)
+	}
 
 	if image_id == "" {
 		return "", "", ""
@@ -729,7 +746,7 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 		return errors.New(fmt.Sprintf("error: argument is not a valid shock node uuid or docker image id\n"))
 	}
 
-	if node_id != "" { // we have a Shock node id
+	if node_id != "" && skyc.Etcd_client != nil { // we have a Shock node id
 
 		// check if we have seen shock node before
 		image_id = skyc.Get_etcd_shock2image(node_id)
@@ -746,7 +763,7 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 		image_tag = etcd_tag
 	}
 
-	if node_id == "" {
+	if node_id == "" && skyc.Etcd_client != nil {
 		node_id = etcd_shock_node
 	}
 
@@ -779,9 +796,10 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 
 		}
 
-		skyc.Set_etcd_shock2image(node_id, image_id)
-		skyc.Set_etcd_image(image_id, image_repository, image_tag, node_id)
-
+		if skyc.Etcd_client != nil {
+			skyc.Set_etcd_shock2image(node_id, image_id)
+			skyc.Set_etcd_image(image_id, image_repository, image_tag, node_id)
+		}
 	}
 
 	if image_id == "" {
@@ -915,8 +933,6 @@ func main() {
 	var request_tag string
 	var help bool
 
-	var etcd_urls []string
-
 	fmt.Fprintf(os.Stdout, fmt.Sprintf("skycore args: %s\n", strings.Join(os.Args, " ")))
 
 	flags = flag.NewFlagSet("name", flag.ContinueOnError)
@@ -947,6 +963,7 @@ func main() {
 		os.Exit(0)
 	}
 
+	var etcd_urls []string
 	if etcd_urls_string != "" {
 		etcd_urls = strings.Split(etcd_urls_string, ",")
 	}
@@ -955,11 +972,12 @@ func main() {
 		Shock_client:  shock.ShockClient{Token: shocktoken, Debug: true},
 		Etcd_client:   nil,
 		Docker_client: nil,
+		Etcd_urls:     etcd_urls,
 	}
 
-	if !no_etcd {
-		skyc.Etcd_client = etcd.NewClient(etcd_urls)
-	}
+	//if !no_etcd {
+	//	skyc.Etcd_client = etcd.NewClient(skyc.Etcd_urls)
+	//}
 
 	// docker client
 	var err error
