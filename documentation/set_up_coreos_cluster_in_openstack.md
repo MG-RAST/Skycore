@@ -56,27 +56,6 @@ nova boot \
   --security-groups default,coreos \
   my_coreos
 ```
-## Log in to your CoreOS cluster
 
-Login with forwarding your ssh user agent. Run these commands on your client outside of the CoreOS cluster:
-```bash
-cd ~/.ssh 
-ln -s <your private key> coreos.pem
-eval $(ssh-agent)
-ssh-add ~/.ssh/coreos.pem
-ssh -A core@<instance>
-```
-You may want to assign a public IP address to one of you CoreOS instances.
-
-## Optional: Set up fleetctl locally to talk to cluster
-```bash
-#Linux:
-wget https://github.com/coreos/fleet/releases/download/v0.9.1/fleet-v0.9.1-linux-amd64.tar.gz
-tar xvzf fleet-v0.9.1-linux-amd64.tar.gz
-cp fleet-v0.9.1-linux-amd64/fleetctl /usr/local/bin/
-#OSX:
-brew update & brew install fleetctl
-
-#Linux/OSX: in your .bashrc
-export FLEETCTL_TUNNEL=<ip address of one coreos instance>
-```
+Other docs moved to:
+https://github.com/MG-RAST/MG-RAST-infrastructure/tree/master/docs
