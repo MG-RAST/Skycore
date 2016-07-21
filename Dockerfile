@@ -1,17 +1,6 @@
 # Skycore factory - a compilation container
 
 FROM golang:1.6.3-alpine
-#FROM mgrast/golang:1.4.2
-
-#RUN apt-get update && apt-get install -y build-essential
-
-
-#RUN curl -s https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz | tar -v -C /usr/local -xz
-
-#ENV GOROOT /usr/local/go
-#ENV PATH /usr/local/go/bin:/gopath/bin:/usr/local/bin:$PATH
-#ENV GOPATH /gopath/
-
 
 
 WORKDIR /go/bin
@@ -20,16 +9,6 @@ COPY . /go/src/github.com/wgerlach/Skycore
 
 RUN cd /go/src/github.com/wgerlach/Skycore && \
     CGO_ENABLED=0 go install -a -installsuffix cgo -v  ...
-
-#RUN /bin/mkdir -p /gopath/src/github.com/wgerlach/ && \
-#  cd /gopath/src/github.com/wgerlach/ && \
-#  git clone --recursive https://github.com/wgerlach/Skycore.git
-
-# compile.sh script for 
-#RUN echo '#!/bin/bash' > /compile.sh ; \
-#  echo 'export GOPATH=/gopath/ ; export CGO_ENABLED=0 ; go install -a -installsuffix cgo -v github.com/wgerlach/Skycore/skycore' >> /compile.sh ; \
-#  chmod +x /compile.sh ; \
-#  /compile.sh
 
 
 ### build container
