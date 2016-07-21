@@ -5,7 +5,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 const (

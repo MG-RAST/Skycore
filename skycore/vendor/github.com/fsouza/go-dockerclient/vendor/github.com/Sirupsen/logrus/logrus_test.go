@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func LogAndAssertJSON(t *testing.T, log func(*Logger), assertions func(fields Fields)) {

@@ -8,7 +8,7 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/docker/docker/pkg/system"
+	"github.com/docker/docker/pkg/system"
 )
 
 // CanonicalTarNameForPath returns platform-specific filepath

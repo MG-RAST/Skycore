@@ -12,7 +12,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient"
+	"github.com/fsouza/go-dockerclient"
 )
 
 func ExampleClient_AttachToContainer() {

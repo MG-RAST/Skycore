@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestEntryPanicln(t *testing.T) {

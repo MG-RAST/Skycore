@@ -2,7 +2,7 @@ package httpclient_test
 
 import (
 	"fmt"
-	. "github.com/wgerlach/Skycore/skycore/vendor/github.com/MG-RAST/Shock/shock-client/lib/httpclient"
+	. "github.com/MG-RAST/Shock/shock-client/lib/httpclient"
 	"io/ioutil"
 	"testing"
 )

@@ -10,8 +10,8 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/docker/docker/pkg/pools"
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/docker/docker/pkg/system"
+	"github.com/docker/docker/pkg/pools"
+	"github.com/docker/docker/pkg/system"
 )
 
 func UnpackLayer(dest string, layer ArchiveReader) (size int64, err error) {

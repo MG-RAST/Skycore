@@ -13,8 +13,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/Sirupsen/logrus"
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/docker/docker/pkg/archive"
+	"github.com/Sirupsen/logrus"
+	"github.com/docker/docker/pkg/archive"
 )
 
 var (

@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/docker/docker/pkg/units"
+	"github.com/docker/docker/pkg/units"
 )
 
 var (

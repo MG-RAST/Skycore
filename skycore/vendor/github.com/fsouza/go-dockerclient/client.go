@@ -25,7 +25,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/docker/docker/pkg/stdcopy"
+	"github.com/docker/docker/pkg/stdcopy"
 )
 
 const userAgent = "go-dockerclient"

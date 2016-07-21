@@ -14,7 +14,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/fsouza/go-dockerclient/vendor/github.com/docker/docker/pkg/ioutils"
+	"github.com/docker/docker/pkg/ioutils"
 )
 
 var (

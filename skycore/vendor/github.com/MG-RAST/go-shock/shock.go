@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/wgerlach/Skycore/skycore/vendor/github.com/MG-RAST/golib/httpclient"
+	"github.com/MG-RAST/golib/httpclient"
 	"io"
 	"io/ioutil"
 	"net/http"
