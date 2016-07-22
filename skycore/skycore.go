@@ -879,9 +879,9 @@ func (skyc *Skycore) skycore_load(command_arg string, request_tag string) (err e
 			// image not found, good, will tag
 			do_tag = true
 		} else {
-			if some_old_image_obj.ID != image_id {
+			if strings.TrimPrefix(some_old_image_obj.ID, "sha256:") != image_id {
 				fmt.Fprintf(os.Stdout, "trying to delete old image %s %s", some_old_image_obj.ID, new_image_name)
-				err = skyc.Docker_client.RemoveImage(some_old_image_obj.ID)
+				err = skyc.Docker_client.RemoveImageExtended(some_old_image_obj.ID, RemoveImageOptions{Force: true, NoPrune: false})
 				if err != nil {
 					return errors.New(fmt.Sprintf("error deleting old image, maybe container is running?: %s", err.Error()))
 				}
