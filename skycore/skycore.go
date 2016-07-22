@@ -9,10 +9,10 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/wgerlach/Skycore/skycore/go-etcd-0.4/etcd"
 	"github.com/MG-RAST/go-shock"
 	"github.com/MG-RAST/golib/go-uuid/uuid"
 	"github.com/fsouza/go-dockerclient"
+	"github.com/wgerlach/Skycore/skycore/go-etcd-0.4/etcd"
 	"io"
 	"mime/multipart"
 	"net/http" // should all be done by shock lib
@@ -519,6 +519,10 @@ func (skyc *Skycore) get_dockerimage_shocknode_attributes(node_id string) (image
 	image_repository = docker_attr.Repository
 	image_tag = docker_attr.Tag
 	image_id = docker_attr.Id
+
+	if strings.HasPrefix(image_id, "sha256:") {
+		image_id = strings.TrimPrefix(image_id, "sha256:")
+	}
 
 	//attr_map, ok := node_response.Data.Attributes.(map[string]interface{}) // is of type map[string]interface{}
 
