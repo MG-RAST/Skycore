@@ -5,18 +5,24 @@ Instructions for OpenStack
 
 Search for latest image in http://stable.release.core-os.net/amd64-usr/ and download:
 ```bash
-wget http://stable.release.core-os.net/amd64-usr/557.2.0/coreos_production_openstack_image.img.bz2
+export COREOS_VERSION=$(curl http://stable.release.core-os.net/amd64-usr/current/version.txt | grep "COREOS_VERSION_ID" | cut -d '=' -f 2)
+echo ${COREOS_VERSION}
+
+wget http://stable.release.core-os.net/amd64-usr/${COREOS_VERSION}/coreos_production_openstack_image.img.bz2
 bunzip2 coreos_production_openstack_image.img.bz2
+```
+
+install glance
+```bash
+pip install python-glanceclient
 ```
 
 import image in OpenStack:
 ```bash
-export COREOS="CoreOS_VERSION"
-glance image-create --name ${COREOS}\
+glance image-create --name CoreOS_${COREOS_VERSION}\
   --container-format bare \
   --disk-format qcow2 \
-  --file coreos_production_openstack_image.img \
-  --is-public False
+  --file coreos_production_openstack_image.img
 ```
 
 ## Prepare cloud-config.sh
