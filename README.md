@@ -6,34 +6,35 @@ Tool to push Docker images into Shock and pull from Shock. Preserves some metada
 Either use the Dockerfile in this repository to statically compile skycore (The Dockerfile contains some more comments), or download pre-compiled binary (amd64):
 
 ```bash
-wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
+wget https://github.com/MG-RAST/Skycore/releases/download/latest/skycore
 ```
 ## Skycore from source (requires golang)
 ```bash
-go get github.com/wgerlach/Skycore/skycore
+go get github.com/MG-RAST/Skycore/skycore
 ```
 
 ### Build container
 ```bash
-docker build --tag skycore/factory:latest .
+docker build --tag mgrast/skycore .
 ```
 
 ### Use container to compile and get binary:
 ```bash
 mkdir -p ~/skycore_bin
-docker run -t -i --name sky_fac -v ~/skycore_bin:/gopath/bin skycore/factory:latest bash
-cd /gopath/src/github.com/wgerlach/Skycore && git pull && /compile.sh
+docker run -t -i --name skycore -v ~/skycore_bin:/gopath/bin mgrast/skycore bash
+cd /gopath/src/github.com/MG-RAST/Skycore && git pull && /compile.sh
 ```
 
 ### skycore execution within container
 ```bash
 # container will need access to docker socket
 mkdir -p ~/skycore_bin
-docker run -t -i -v /var/run/docker.sock:/var/run/docker.sock --name sky_fac -v ~/skycore_bin:/gopath/bin skycore/factory:latest bash
+docker run -t -i -v /var/run/docker.sock:/var/run/docker.sock --name sky_fac -v ~/skycore_bin:/gopath/bin mgrast/skycore bash
 ```
 
 ## update skycore vendors
 ```bash
+# NOTE: this is deprecated
 go get -v github.com/mjibson/party
 cd $GOPATH/src/github.com/wgerlach/
 git clone --recursive git@github.com:wgerlach/Skycore.git
@@ -66,7 +67,7 @@ for i in ${MACHINES} ; do echo -n "$i: " ; ssh -i ~/.ssh/coreos.pem -o StrictHos
 
 Finally, copy the binary:
 ```bash
-rm -f skycore ; wget https://github.com/wgerlach/Skycore/releases/download/latest/skycore
+rm -f skycore ; wget https://github.com/MG-RAST/Skycore/releases/download/latest/skycore
 chmod +x skycore
 for i in ${MACHINES} ; do scp -i ~/.ssh/coreos.pem -o StrictHostKeyChecking=no ./skycore core@${i}: ; done
 ```
