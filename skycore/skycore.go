@@ -12,7 +12,7 @@ import (
 	"github.com/MG-RAST/go-shock"
 	"github.com/MG-RAST/golib/go-uuid/uuid"
 	"github.com/fsouza/go-dockerclient"
-	"github.com/wgerlach/Skycore/skycore/go-etcd-0.4/etcd"
+	"github.com/MG-RAST/Skycore/skycore/go-etcd-0.4/etcd"
 	"io"
 	"mime/multipart"
 	"net/http" // should all be done by shock lib
