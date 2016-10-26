@@ -30,7 +30,7 @@ Use this bash alias:
 ```bash
 export SKYCORE_SHOCK=<host>
 export SKYCORE_SHOCK_TOKEN=<token>
-alias skycore='docker run -ti --rm --env SKYCORE_SHOCK=${SKYCORE_SHOCK} --env SKYCORE_SHOCK_TOKEN=${SKYCORE_SHOCK_TOKEN} -v /var/run/docker.sock:/var/run/docker.sock --name skycore mgrast/skycore'
+alias skycore='docker run -ti --rm --env SKYCORE_SHOCK=${SKYCORE_SHOCK} --env "SKYCORE_SHOCK_TOKEN=${SKYCORE_SHOCK_TOKEN}" -v /var/run/docker.sock:/var/run/docker.sock --name skycore mgrast/skycore'
 ```
 
 ## update skycore vendors
